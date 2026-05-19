@@ -950,8 +950,7 @@ function showToast(msg, duration = 2800) {
 }
 
 function formatPhone(raw) {
-  // Remove tudo que não for dígito
-  let d = raw.replace(/\D/g, '');
+  let d = String(raw).replace(/\D/g, '');
   // Garante código de país 55
   if (!d.startsWith('55')) d = '55' + d;
   return d;
