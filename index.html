@@ -140,16 +140,25 @@
     ============================================================ */
     .logo-svg { height: 54px; width: auto; }
     .logo-wrap {
-      width: 52px;
+      width: 148px;
       height: 52px;
       border-radius: 10px;
-      background: #fff url('logo.png') no-repeat;
-      background-size: 420%;
-      background-position: 21% 50%;
+      overflow: hidden;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       flex-shrink: 0;
+    }
+    .logo-img {
+      height: 138px;
+      width: auto;
+      max-width: none;
+      flex-shrink: 0;
+      display: block;
     }
 
     /* ============================================================
@@ -675,7 +684,9 @@
   <!-- Header -->
   <header class="pub-header">
     <!-- Logo Viva Fisio — ícone + texto em linha única -->
-    <div id="logo-tap" class="logo-wrap" role="img" aria-label="Viva Fisio"></div>
+    <div id="logo-tap" class="logo-wrap">
+      <img src="logo.png" alt="Viva Fisio" class="logo-img">
+    </div>
 
     <a href="https://www.instagram.com/plurmovimento/" target="_blank" rel="noopener" class="ig-btn">
       <!-- Instagram icon -->
