@@ -986,7 +986,7 @@ function buildWaLink(phone, name, timeStr) {
    ──────────────────────────────────────────────── */
 async function apiGet(params) {
   const qs = new URLSearchParams({ ...params, _t: Date.now() }).toString();
-  const resp = await fetch(`${CONFIG.SCRIPT_URL}?${qs}`);
+  const resp = await fetch(`${CONFIG.SCRIPT_URL}?${qs}`, { cache: 'no-store' });
   return resp.json();
 }
 
@@ -1030,7 +1030,7 @@ document.getElementById('reg-form').addEventListener('submit', async function(e)
   submitBtn.innerHTML = '<span class="spinner"></span> Cadastrando…';
 
   try {
-    const result = await apiPost({
+    const result = await apiGet({
       action: 'register',
       name,
       phone,
