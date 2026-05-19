@@ -415,7 +415,7 @@
     /* --- Instagram Footer --- */
     .ig-footer {
       text-align: center;
-      padding: 20px 16px 48px;
+      padding: 20px 16px calc(48px + env(safe-area-inset-bottom, 16px));
     }
     .ig-footer-link {
       display: inline-flex;
@@ -453,7 +453,7 @@
     .adm-title        { font-size: 15px; font-weight: 700; }
     .adm-badge        { background: #EF4444; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 100px; text-transform: uppercase; letter-spacing: .5px; }
 
-    .adm-body { padding: 16px; max-width: 720px; margin: 0 auto; }
+    .adm-body { padding: 16px; padding-bottom: calc(24px + env(safe-area-inset-bottom, 16px)); max-width: 720px; margin: 0 auto; }
 
     /* Config bar */
     .config-bar {
