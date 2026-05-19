@@ -1020,7 +1020,7 @@ document.getElementById('reg-form').addEventListener('submit', async function(e)
   submitBtn.innerHTML = '<span class="spinner"></span> Cadastrando…';
 
   try {
-    const result = await apiGet({
+    const result = await apiPost({
       action: 'register',
       name,
       phone,
