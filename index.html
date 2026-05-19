@@ -1001,7 +1001,7 @@ function buildWaLink(phone, name, timeStr) {
    GET para tudo — evita redirect CORS do Apps Script
    ──────────────────────────────────────────────── */
 async function apiGet(params) {
-  const qs = new URLSearchParams(params).toString();
+  const qs = new URLSearchParams({ ...params, _t: Date.now() }).toString();
   const resp = await fetch(`${CONFIG.SCRIPT_URL}?${qs}`);
   return resp.json();
 }
