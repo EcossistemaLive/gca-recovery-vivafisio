@@ -140,16 +140,17 @@
     ============================================================ */
     .logo-svg { height: 54px; width: auto; }
     .logo-wrap {
-      background: #fff;
-      border-radius: 8px;
-      padding: 4px 10px;
-      display: inline-flex;
-      align-items: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 10px;
+      background: #fff url('logo.png') no-repeat;
+      background-size: 420%;
+      background-position: 21% 50%;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
+      flex-shrink: 0;
     }
-    .logo-img { height: 36px; width: auto; display: block; }
 
     /* ============================================================
        ===  PUBLIC VIEW  ===
@@ -674,9 +675,7 @@
   <!-- Header -->
   <header class="pub-header">
     <!-- Logo Viva Fisio — ícone + texto em linha única -->
-    <div id="logo-tap" class="logo-wrap" aria-label="Viva Fisio">
-      <img src="logo.png" alt="Viva Fisio" class="logo-img">
-    </div>
+    <div id="logo-tap" class="logo-wrap" role="img" aria-label="Viva Fisio"></div>
 
     <a href="https://www.instagram.com/plurmovimento/" target="_blank" rel="noopener" class="ig-btn">
       <!-- Instagram icon -->
@@ -809,9 +808,7 @@
   <header class="adm-header">
     <div class="adm-header-left">
       <!-- Compact logo admin -->
-      <div class="logo-wrap" style="padding:3px 8px;">
-        <img src="logo.png" alt="Viva Fisio" class="logo-img" style="height:30px;">
-      </div>
+      <div class="logo-wrap" role="img" aria-label="Viva Fisio" style="width:44px;height:44px;"></div>
       <div>
         <div class="adm-title">Painel da Fila</div>
         <div style="font-size:11px;color:#94A3B8;">Goiânia Crew Attack</div>
@@ -968,11 +965,7 @@ function minutesUntil(timeStr) {
 function buildWaLink(phone, name, timeStr) {
   const clean = formatPhone(phone);
   const msg = encodeURIComponent(
-    `Olá ${name}! 👋 Sua vez no Recovery está chegando!\n\n` +
-    `⏱️ Horário previsto: *${timeStr}*\n` +
-    `📍 Local: *${CONFIG.EVENT_LOCATION}*\n\n` +
-    `Venha se preparar para o atendimento nos próximos 5 minutos! 💪\n` +
-    `#GoiâniaCrueAttack #VivaFisio`
+    `Olá ${name}! Está chegando sua vez no Recovery da Viva Fisio, venha até a nossa Tenda.`
   );
   return `https://wa.me/${clean}?text=${msg}`;
 }
