@@ -139,6 +139,17 @@
        LOGO SVG (inline — recriada fielmente)
     ============================================================ */
     .logo-svg { height: 54px; width: auto; }
+    .logo-wrap {
+      background: #fff;
+      border-radius: 8px;
+      padding: 4px 10px;
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .logo-img { height: 36px; width: auto; display: block; }
 
     /* ============================================================
        ===  PUBLIC VIEW  ===
@@ -663,29 +674,9 @@
   <!-- Header -->
   <header class="pub-header">
     <!-- Logo Viva Fisio — ícone + texto em linha única -->
-    <svg id="logo-tap" class="logo-svg" viewBox="0 0 190 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Viva Fisio" style="cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;">
-      <defs>
-        <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#60A5FA"/>
-          <stop offset="100%" stop-color="#4ADE80"/>
-        </linearGradient>
-      </defs>
-      <!-- Folha esquerda -->
-      <path d="M14 4 C7 4 2 11 4 21 C7 30 14 34 14 34 L14 4Z"
-            stroke="#60A5FA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-      <!-- Folha direita -->
-      <path d="M28 4 C35 4 40 11 38 21 C35 30 28 34 28 34 L28 4Z"
-            stroke="#4ADE80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-      <!-- Base V -->
-      <path d="M4 21 Q14 34 21 39 Q28 34 38 21"
-            stroke="url(#g1)" stroke-width="2.2" stroke-linecap="round" fill="none"/>
-      <!-- Linha divisória -->
-      <line x1="52" y1="8" x2="52" y2="40" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
-      <!-- VIVA em branco -->
-      <text x="62" y="22" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="17" fill="#FFFFFF" letter-spacing="1">VIVA</text>
-      <!-- FISIO mais claro, menor -->
-      <text x="62" y="38" font-family="Inter, Arial, sans-serif" font-weight="400" font-size="12" fill="rgba(255,255,255,.5)" letter-spacing="3.5">FISIO</text>
-    </svg>
+    <div id="logo-tap" class="logo-wrap" aria-label="Viva Fisio">
+      <img src="logo.png" alt="Viva Fisio" class="logo-img">
+    </div>
 
     <a href="https://www.instagram.com/plurmovimento/" target="_blank" rel="noopener" class="ig-btn">
       <!-- Instagram icon -->
@@ -818,19 +809,9 @@
   <header class="adm-header">
     <div class="adm-header-left">
       <!-- Compact logo admin -->
-      <svg height="38" viewBox="0 0 190 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="ga" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#60A5FA"/><stop offset="100%" stop-color="#4ADE80"/>
-          </linearGradient>
-        </defs>
-        <path d="M14 4 C7 4 2 11 4 21 C7 30 14 34 14 34 L14 4Z" stroke="#60A5FA" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M28 4 C35 4 40 11 38 21 C35 30 28 34 28 34 L28 4Z" stroke="#4ADE80" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M4 21 Q14 34 21 39 Q28 34 38 21" stroke="url(#ga)" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-        <line x1="52" y1="8" x2="52" y2="40" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
-        <text x="62" y="22" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="17" fill="#FFFFFF" letter-spacing="1">VIVA</text>
-        <text x="62" y="38" font-family="Inter, Arial, sans-serif" font-weight="400" font-size="12" fill="rgba(255,255,255,.5)" letter-spacing="3.5">FISIO</text>
-      </svg>
+      <div class="logo-wrap" style="padding:3px 8px;">
+        <img src="logo.png" alt="Viva Fisio" class="logo-img" style="height:30px;">
+      </div>
       <div>
         <div class="adm-title">Painel da Fila</div>
         <div style="font-size:11px;color:#94A3B8;">Goiânia Crew Attack</div>
