@@ -135,12 +135,8 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ============================================================
-       LOGO SVG (inline — recriada fielmente)
-    ============================================================ */
-    .logo-svg { height: 54px; width: auto; }
     .logo-wrap {
-      width: 148px;
+      width: 170px;
       height: 52px;
       border-radius: 10px;
       overflow: hidden;
@@ -148,16 +144,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 4px 8px;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       flex-shrink: 0;
     }
     .logo-img {
-      height: 138px;
-      width: auto;
-      max-width: none;
-      flex-shrink: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
       display: block;
     }
 
@@ -873,12 +869,20 @@
     <!-- Queue list -->
     <div class="queue-section-title">
       <span>Fila completa</span>
-      <button class="refresh-btn" id="btn-refresh" onclick="loadQueue()">
-        <svg id="refresh-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-        </svg>
-        Atualizar
-      </button>
+      <div style="display:flex;gap:8px;">
+        <button class="refresh-btn" id="btn-refresh" onclick="loadQueue()">
+          <svg id="refresh-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+          </svg>
+          Atualizar
+        </button>
+        <button class="refresh-btn" onclick="exportCSV()" title="Exportar planilha CSV">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Exportar
+        </button>
+      </div>
     </div>
     <div class="queue-list" id="a-queue-list">
       <div class="empty"><div class="empty-icon">🏃</div><div class="empty-text">Carregando fila…</div></div>
@@ -888,62 +892,59 @@
 </div><!-- /view-admin -->
 
 
+<!-- Firebase SDK (compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
 <!-- ============================================================
      JAVASCRIPT
 ============================================================ -->
 <script>
-/* ────────────────────────────────────────────────
-   CONFIG — edite aqui ou via SETUP.md
-   ──────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   FIREBASE CONFIG
+   Cole aqui os dados do seu projeto (veja instruções abaixo)
+   ═══════════════════════════════════════════════════════════ */
+const FIREBASE_CONFIG = {
+  apiKey:            "COLE_AQUI",
+  authDomain:        "COLE_AQUI.firebaseapp.com",
+  databaseURL:       "https://COLE_AQUI-default-rtdb.firebaseio.com",
+  projectId:         "COLE_AQUI",
+  storageBucket:     "COLE_AQUI.appspot.com",
+  messagingSenderId: "COLE_AQUI",
+  appId:             "COLE_AQUI"
+};
+
+/* ═══════════════════════════════════════════════════════════
+   APP CONFIG
+   ═══════════════════════════════════════════════════════════ */
 const CONFIG = {
-  // Cole aqui a URL do seu Google Apps Script depois de publicar
-  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbw5_2fMN4mZwEzsO9UIQyT4dThYj1hFp5vHTmDkocS8f3vdxa8fceEv1GC6WqWxBS0D/exec',
-
-  // Chave secreta para o painel admin (mesma do Code.gs)
-  ADMIN_KEY: 'AdminViva',
-
-  // Local do evento (exibido na confirmação)
+  ADMIN_KEY:      'AdminViva',
   EVENT_LOCATION: 'Tenda da Viva Fisio',
-
-  // Duração por atendimento em minutos
-  DURATION_MIN: 30,
-
-  // Intervalo de polling no admin (ms)
-  POLL_INTERVAL: 12000
+  DURATION_MIN:   30
 };
 
-/* ────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════
+   FIREBASE INIT
+   ═══════════════════════════════════════════════════════════ */
+firebase.initializeApp(FIREBASE_CONFIG);
+const db          = firebase.database();
+const regRef      = db.ref('registrations');
+const counterRef  = db.ref('meta/nextPosition');
+
+/* ═══════════════════════════════════════════════════════════
    STATE
-   ──────────────────────────────────────────────── */
+   ═══════════════════════════════════════════════════════════ */
 const state = {
-  isAdmin: false,
-  adminKey: '',
-  startTime: localStorage.getItem('gca_start') || '09:00',
-  queue: [],
-  pollTimer: null,
-  notifEnabled: false
+  isAdmin:           false,
+  startTime:         localStorage.getItem('gca_start') || '09:00',
+  queue:             [],
+  notifEnabled:      false,
+  _listenerAttached: false
 };
 
-/* ────────────────────────────────────────────────
-   INIT
-   ──────────────────────────────────────────────── */
-function init() {
-  const params = new URLSearchParams(window.location.search);
-  const adminParam = params.get('admin');
-
-  if (adminParam) {
-    state.isAdmin = true;
-    state.adminKey = adminParam;
-    document.getElementById('view-public').style.display = 'none';
-    document.getElementById('view-admin').style.display = 'block';
-    document.getElementById('a-start-time').value = state.startTime;
-    startAdminPolling();
-  }
-}
-
-/* ────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════
    UTILS
-   ──────────────────────────────────────────────── */
+   ═══════════════════════════════════════════════════════════ */
 function showToast(msg, duration = 2800) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -951,9 +952,14 @@ function showToast(msg, duration = 2800) {
   setTimeout(() => t.classList.remove('show'), duration);
 }
 
+function esc(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 function formatPhone(raw) {
   let d = String(raw).replace(/\D/g, '');
-  // Garante código de país 55
   if (!d.startsWith('55')) d = '55' + d;
   return d;
 }
@@ -963,8 +969,7 @@ function calcEstimatedTime(position, startTimeStr) {
   const base = new Date();
   base.setHours(h, m, 0, 0);
   const ms = base.getTime() + (position - 1) * CONFIG.DURATION_MIN * 60000;
-  const d = new Date(ms);
-  return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  return new Date(ms).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 }
 
 function minutesUntil(timeStr) {
@@ -974,37 +979,33 @@ function minutesUntil(timeStr) {
   return Math.round((target - Date.now()) / 60000);
 }
 
-function buildWaLink(phone, name, timeStr) {
+function buildWaLink(phone, name) {
   const clean = formatPhone(phone);
-  const msg = encodeURIComponent(
+  const msg   = encodeURIComponent(
     `Olá ${name}! Está chegando sua vez no Recovery da Viva Fisio, venha até a nossa Tenda.`
   );
   return `https://wa.me/${clean}?text=${msg}`;
 }
 
-/* ────────────────────────────────────────────────
-   API CALLS
-   GET para tudo — evita redirect CORS do Apps Script
-   ──────────────────────────────────────────────── */
-async function apiGet(params) {
-  const qs = new URLSearchParams({ ...params, _t: Date.now() }).toString();
-  const resp = await fetch(`${CONFIG.SCRIPT_URL}?${qs}`, { cache: 'no-store' });
-  return resp.json();
+/* ═══════════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════════ */
+function init() {
+  const params     = new URLSearchParams(window.location.search);
+  const adminParam = params.get('admin');
+
+  if (adminParam && adminParam === CONFIG.ADMIN_KEY) {
+    state.isAdmin = true;
+    document.getElementById('view-public').style.display = 'none';
+    document.getElementById('view-admin').style.display  = 'block';
+    document.getElementById('a-start-time').value        = state.startTime;
+    startAdminListener();
+  }
 }
 
-// Mantém apiPost para compatibilidade (updateStatus ainda usa POST)
-async function apiPost(body) {
-  const resp = await fetch(CONFIG.SCRIPT_URL, {
-    method: 'POST',
-    body: JSON.stringify(body),
-    headers: { 'Content-Type': 'text/plain' }
-  });
-  return resp.json();
-}
-
-/* ────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════
    REGISTRATION FORM
-   ──────────────────────────────────────────────── */
+   ═══════════════════════════════════════════════════════════ */
 document.getElementById('reg-form').addEventListener('submit', async function(e) {
   e.preventDefault();
 
@@ -1016,13 +1017,12 @@ document.getElementById('reg-form').addEventListener('submit', async function(e)
 
   errDiv.style.display = 'none';
 
-  // Validação simples
   if (!name || !phone || !instagram) {
     errDiv.textContent = 'Por favor, preencha todos os campos.';
     errDiv.style.display = 'block';
     return;
   }
-  if (phone.replace(/\D/g,'').length < 10) {
+  if (phone.replace(/\D/g, '').length < 10) {
     errDiv.textContent = 'Número de WhatsApp inválido. Inclua o DDD.';
     errDiv.style.display = 'block';
     return;
@@ -1032,26 +1032,28 @@ document.getElementById('reg-form').addEventListener('submit', async function(e)
   submitBtn.innerHTML = '<span class="spinner"></span> Cadastrando…';
 
   try {
-    const result = await apiGet({
-      action: 'register',
+    // Contador atômico — sem race condition entre usuários simultâneos
+    const txResult = await counterRef.transaction(n => (n || 0) + 1);
+    const position = txResult.snapshot.val();
+
+    const ig = instagram.startsWith('@') ? instagram : '@' + instagram;
+
+    await regRef.push({
       name,
       phone,
-      instagram: instagram.startsWith('@') ? instagram : '@' + instagram
+      instagram: ig,
+      status:    'waiting',
+      position,
+      createdAt: firebase.database.ServerValue.TIMESTAMP
     });
 
-    if (result.success) {
-      const position = result.position;
-      const estTime  = calcEstimatedTime(position, state.startTime);
+    const estTime = calcEstimatedTime(position, state.startTime);
+    document.getElementById('s-position').textContent = position + 'º';
+    document.getElementById('s-time').textContent     = estTime;
+    document.getElementById('section-form').style.display    = 'none';
+    document.getElementById('section-success').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      document.getElementById('s-position').textContent = position + 'º';
-      document.getElementById('s-time').textContent     = estTime;
-
-      document.getElementById('section-form').style.display    = 'none';
-      document.getElementById('section-success').style.display = 'block';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      throw new Error(result.error || 'Erro ao cadastrar.');
-    }
   } catch (err) {
     errDiv.textContent = '⚠️ ' + (err.message || 'Não foi possível conectar. Tente novamente.');
     errDiv.style.display = 'block';
@@ -1067,9 +1069,33 @@ document.getElementById('btn-reregister').addEventListener('click', function() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-/* ────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════
+   ADMIN — LISTENER EM TEMPO REAL
+   ═══════════════════════════════════════════════════════════ */
+function startAdminListener() {
+  if (state._listenerAttached) return;
+  state._listenerAttached = true;
+
+  regRef.orderByChild('position').on('value', snapshot => {
+    const items = [];
+    snapshot.forEach(child => {
+      items.push({ id: child.key, ...child.val() });
+    });
+    state.queue = items;
+    renderQueue();
+  }, err => {
+    showToast('⚠️ Erro ao carregar fila: ' + err.message);
+  });
+}
+
+// Compatibilidade com o botão "Atualizar" no HTML — sem-op pois o listener já é em tempo real
+function loadQueue() {
+  showToast('🔄 Fila atualizada automaticamente em tempo real');
+}
+
+/* ═══════════════════════════════════════════════════════════
    ADMIN — CONFIG
-   ──────────────────────────────────────────────── */
+   ═══════════════════════════════════════════════════════════ */
 document.getElementById('btn-save-config').addEventListener('click', function() {
   const val = document.getElementById('a-start-time').value;
   if (!val) return;
@@ -1089,49 +1115,34 @@ document.getElementById('btn-notif').addEventListener('click', async function() 
     state.notifEnabled = true;
     this.classList.add('active');
     this.textContent = '🔔 Alertas ON';
-    showToast('✅ Alertas de WhatsApp ativados');
+    showToast('✅ Alertas ativados');
   } else {
     showToast('❌ Permissão de notificação negada');
   }
 });
 
-/* ────────────────────────────────────────────────
-   ADMIN — LOAD QUEUE
-   ──────────────────────────────────────────────── */
-async function loadQueue() {
-  const btn = document.getElementById('btn-refresh');
-  const icon = document.getElementById('refresh-icon');
-  btn.classList.add('spinning');
-
+/* ═══════════════════════════════════════════════════════════
+   ADMIN — STATUS UPDATE (Firebase)
+   ═══════════════════════════════════════════════════════════ */
+async function setStatus(id, status) {
   try {
-    const result = await apiGet({ action: 'list', key: state.adminKey });
-    if (result.success) {
-      state.queue = result.data || [];
-      renderQueue();
-    } else {
-      showToast('❌ Erro: ' + (result.error || 'Chave inválida'));
-    }
+    await db.ref('registrations/' + id).update({ status });
+    const labels = { attending: '▶ Em atendimento', done: '✅ Concluído', waiting: '↩ Reaberto' };
+    showToast(labels[status] || 'Atualizado');
   } catch (err) {
-    showToast('⚠️ Não foi possível carregar a fila');
-  } finally {
-    btn.classList.remove('spinning');
+    showToast('⚠️ Sem conexão — tente novamente');
   }
 }
 
-function startAdminPolling() {
-  loadQueue();
-  state.pollTimer = setInterval(loadQueue, CONFIG.POLL_INTERVAL);
-}
-
-/* ────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════
    ADMIN — RENDER QUEUE
-   ──────────────────────────────────────────────── */
+   ═══════════════════════════════════════════════════════════ */
 const notifiedSet = new Set();
 
 function renderQueue() {
-  const list    = document.getElementById('a-queue-list');
-  const queue   = state.queue;
-  const start   = state.startTime;
+  const list  = document.getElementById('a-queue-list');
+  const queue = state.queue;
+  const start = state.startTime;
 
   if (!queue.length) {
     list.innerHTML = '<div class="empty"><div class="empty-icon">🏃</div><div class="empty-text">Nenhum cadastro ainda</div></div>';
@@ -1143,39 +1154,34 @@ function renderQueue() {
   let waiting = 0, attending = 0, done = 0;
   let currentItem = null, nextItem = null;
 
-  // First pass — counts & spotlight
   queue.forEach(item => {
     if (item.status === 'attending') { attending++; currentItem = item; }
     else if (item.status === 'done') done++;
     else waiting++;
   });
 
-  // Next = first waiting
   nextItem = queue.find(i => i.status === 'waiting') || null;
 
   updateStats(waiting, attending, done);
   updateSpotlights(currentItem, nextItem);
 
-  // Re-number waiting items for time calc
   let waitPos = 0;
   const html = queue.map(item => {
     const isWaiting   = item.status === 'waiting';
     const isAttending = item.status === 'attending';
     const isDone      = item.status === 'done';
+    const id          = item.id;
 
     if (isWaiting) waitPos++;
-    const pos = item.position;
 
-    const estTime = isWaiting
+    const estTime    = isWaiting
       ? calcEstimatedTime(waitPos + (attending > 0 ? 1 : 0), start)
       : (isAttending ? 'Em atendimento' : 'Concluído');
-
-    const minsUntil = isWaiting ? minutesUntil(estTime) : 999;
+    const minsUntil  = isWaiting ? minutesUntil(estTime) : 999;
     const needsAlert = isWaiting && minsUntil <= 5 && minsUntil >= -2;
 
-    // Browser notification
-    if (needsAlert && !notifiedSet.has(item.position) && state.notifEnabled) {
-      notifiedSet.add(item.position);
+    if (needsAlert && !notifiedSet.has(id) && state.notifEnabled) {
+      notifiedSet.add(id);
       new Notification('⏰ Hora de avisar!', {
         body: `${item.name} — ${estTime} (${minsUntil}min)`,
         icon: ''
@@ -1186,7 +1192,7 @@ function renderQueue() {
       <div class="q-item status-${item.status}" id="qi-${item.position}">
         <div class="q-item-inner">
           <div class="qi-row1">
-            <div class="qi-num">${pos}</div>
+            <div class="qi-num">${item.position}</div>
             <div class="qi-name">${esc(item.name)}</div>
             ${needsAlert
               ? '<span class="pill pill-alert">⚠️ Avisar!</span>'
@@ -1198,32 +1204,34 @@ function renderQueue() {
             <span>📱 ${esc(item.phone)}</span>
             <span>${esc(item.instagram)}</span>
             ${isWaiting
-              ? `<span class="qi-time">🕐 ${estTime}${needsAlert ? ` <span class="qi-alert">(${minsUntil >= 0 ? minsUntil + 'min' : 'AGORA'})</span>` : ''}</span>`
+              ? `<span class="qi-time">🕐 ${estTime}${needsAlert
+                  ? ` <span class="qi-alert">(${minsUntil >= 0 ? minsUntil + 'min' : 'AGORA'})</span>`
+                  : ''}</span>`
               : ''}
           </div>
           <div class="qi-actions">
             ${isWaiting || isAttending ? `
-              <a href="${buildWaLink(item.phone, item.name, isWaiting ? estTime : 'agora')}"
+              <a href="${buildWaLink(item.phone, item.name)}"
                  target="_blank" class="btn btn-wa" title="Enviar WhatsApp">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
                 Notificar
               </a>
             ` : ''}
             ${isWaiting ? `
-              <button class="btn btn-mark" onclick="setStatus(${item.position}, 'attending')">
+              <button class="btn btn-mark" onclick="setStatus('${id}', 'attending')">
                 ▶ Em atendimento
               </button>
             ` : ''}
             ${isAttending ? `
-              <button class="btn btn-done" onclick="setStatus(${item.position}, 'done')">
+              <button class="btn btn-done" onclick="setStatus('${id}', 'done')">
                 ✅ Concluído
               </button>
-              <button class="btn btn-icon" onclick="setStatus(${item.position}, 'waiting')" style="font-size:11px">
+              <button class="btn btn-icon" onclick="setStatus('${id}', 'waiting')" style="font-size:11px">
                 ↩ Voltar
               </button>
             ` : ''}
             ${isDone ? `
-              <button class="btn btn-icon" onclick="setStatus(${item.position}, 'waiting')" style="font-size:11px">
+              <button class="btn btn-icon" onclick="setStatus('${id}', 'waiting')" style="font-size:11px">
                 ↩ Reabrir
               </button>
             ` : ''}
@@ -1243,19 +1251,18 @@ function updateSpotlights(current, next) {
   const nt = document.getElementById('a-next-time');
 
   if (current) {
-    cn.innerHTML = `<strong>${esc(current.name)}</strong>`;
+    cn.innerHTML   = `<strong>${esc(current.name)}</strong>`;
     ct.textContent = '📱 ' + current.phone;
   } else {
-    cn.innerHTML = '<span class="spot-empty">Nenhum em atendimento</span>';
+    cn.innerHTML   = '<span class="spot-empty">Nenhum em atendimento</span>';
     ct.textContent = '';
   }
 
   if (next) {
-    nn.innerHTML = `<strong>${esc(next.name)}</strong>`;
-    const t = calcEstimatedTime(next.position, state.startTime);
-    nt.textContent = '🕐 Previsto: ' + t;
+    nn.innerHTML   = `<strong>${esc(next.name)}</strong>`;
+    nt.textContent = '🕐 Previsto: ' + calcEstimatedTime(next.position, state.startTime);
   } else {
-    nn.innerHTML = '<span class="spot-empty">Fila vazia</span>';
+    nn.innerHTML   = '<span class="spot-empty">Fila vazia</span>';
     nt.textContent = '';
   }
 }
@@ -1266,66 +1273,57 @@ function updateStats(wait, attend, done) {
   document.getElementById('a-count-done').textContent   = done;
 }
 
-/* ────────────────────────────────────────────────
-   ADMIN — STATUS UPDATE
-   ──────────────────────────────────────────────── */
-async function setStatus(position, status) {
-  try {
-    const result = await apiPost({
-      action: 'updateStatus',
-      key: state.adminKey,
-      position,
-      status
-    });
-    if (result.success) {
-      // Optimistic update
-      const item = state.queue.find(i => i.position === position);
-      if (item) item.status = status;
-      renderQueue();
-      const labels = { attending: '▶ Em atendimento', done: '✅ Concluído', waiting: '↩ Reaberto' };
-      showToast(labels[status] || 'Atualizado');
-    } else {
-      showToast('❌ Erro: ' + (result.error || 'Falha na atualização'));
-    }
-  } catch (err) {
-    showToast('⚠️ Sem conexão — tente novamente');
-  }
+/* ═══════════════════════════════════════════════════════════
+   EXPORTAR PLANILHA CSV
+   ═══════════════════════════════════════════════════════════ */
+function exportCSV() {
+  if (!state.queue.length) { showToast('⚠️ Fila ainda vazia'); return; }
+
+  const headers  = ['Posição', 'Nome', 'WhatsApp', 'Instagram', 'Status', 'Cadastrado em'];
+  const statusPt = { waiting: 'Aguardando', attending: 'Em atendimento', done: 'Concluído' };
+
+  const rows = state.queue.map(item => [
+    item.position,
+    item.name,
+    item.phone,
+    item.instagram,
+    statusPt[item.status] || item.status,
+    item.createdAt
+      ? new Date(item.createdAt).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+      : ''
+  ]);
+
+  const csv = [headers, ...rows]
+    .map(row => row.map(c => '"' + String(c || '').replace(/"/g, '""') + '"').join(','))
+    .join('\r\n');
+
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'recovery-gca-' + new Date().toISOString().slice(0, 10) + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('✅ Planilha exportada!');
 }
 
-/* ────────────────────────────────────────────────
-   UTIL — escape HTML
-   ──────────────────────────────────────────────── */
-function esc(str) {
-  return String(str || '')
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;');
-}
-
-/* ────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════
    ACESSO SECRETO — 4 toques no logo
-   ──────────────────────────────────────────────── */
+   ═══════════════════════════════════════════════════════════ */
 (function () {
   const REQUIRED = 4;
-  const TIMEOUT  = 2200; // ms entre toques antes de resetar
+  const TIMEOUT  = 2200;
   let count = 0;
   let timer = null;
 
-  // Pontos de feedback visual — pequenos dots abaixo do logo
   const dotsEl = document.createElement('div');
   dotsEl.id = 'tap-dots';
   dotsEl.style.cssText = [
-    'position:fixed',
-    'bottom:28px',
-    'left:50%',
-    'transform:translateX(-50%)',
-    'display:flex',
-    'gap:6px',
-    'z-index:9998',
-    'pointer-events:none',
-    'opacity:0',
-    'transition:opacity .2s'
+    'position:fixed', 'bottom:28px', 'left:50%',
+    'transform:translateX(-50%)', 'display:flex', 'gap:6px',
+    'z-index:9998', 'pointer-events:none', 'opacity:0', 'transition:opacity .2s'
   ].join(';');
   document.body.appendChild(dotsEl);
 
@@ -1334,57 +1332,43 @@ function esc(str) {
     for (let i = 0; i < REQUIRED; i++) {
       const d = document.createElement('div');
       d.style.cssText = [
-        'width:7px',
-        'height:7px',
-        'border-radius:50%',
+        'width:7px', 'height:7px', 'border-radius:50%',
         'background:' + (i < n ? '#60A5FA' : 'rgba(255,255,255,.25)'),
-        'border:1.5px solid rgba(255,255,255,.4)',
-        'transition:background .15s'
+        'border:1.5px solid rgba(255,255,255,.4)', 'transition:background .15s'
       ].join(';');
       dotsEl.appendChild(d);
     }
     dotsEl.style.opacity = n > 0 ? '1' : '0';
   }
 
-  function resetCount() {
-    count = 0;
-    dotsEl.style.opacity = '0';
-  }
+  function resetCount() { count = 0; dotsEl.style.opacity = '0'; }
 
   function activateAdmin() {
     resetCount();
-    // Flash de confirmação
     const flash = document.createElement('div');
     flash.style.cssText = [
-      'position:fixed','inset:0',
-      'background:rgba(96,165,250,.08)',
-      'z-index:9997',
-      'pointer-events:none',
-      'transition:opacity .4s'
+      'position:fixed', 'inset:0', 'background:rgba(96,165,250,.08)',
+      'z-index:9997', 'pointer-events:none', 'transition:opacity .4s'
     ].join(';');
     document.body.appendChild(flash);
     setTimeout(() => { flash.style.opacity = '0'; setTimeout(() => flash.remove(), 400); }, 150);
 
-    // Ativar admin
     state.isAdmin = true;
-    state.adminKey = CONFIG.ADMIN_KEY;
     document.getElementById('view-public').style.display = 'none';
     document.getElementById('view-admin').style.display  = 'block';
     document.getElementById('a-start-time').value = state.startTime;
-    startAdminPolling();
+    startAdminListener();
     showToast('🔐 Painel admin aberto');
   }
 
   const logo = document.getElementById('logo-tap');
   if (!logo) return;
 
-  // pointerdown dispara UMA vez para touch e mouse — sem duplo disparo
   logo.addEventListener('pointerdown', function(e) {
-    if (e.button !== 0 && e.pointerType === 'mouse') return; // só botão principal
+    if (e.button !== 0 && e.pointerType === 'mouse') return;
     count++;
     renderDots(count);
     clearTimeout(timer);
-
     if (count >= REQUIRED) {
       activateAdmin();
     } else {
@@ -1393,9 +1377,9 @@ function esc(str) {
   });
 })();
 
-/* ────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════
    BOOT
-   ──────────────────────────────────────────────── */
+   ═══════════════════════════════════════════════════════════ */
 init();
 </script>
 </body>
