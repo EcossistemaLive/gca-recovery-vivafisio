@@ -6,29 +6,36 @@
   <meta name="theme-color" content="#1E293B">
   <title>Recovery — Goiânia Crew Attack × Viva Fisio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     /* ============================================================
        TOKENS & RESET
     ============================================================ */
     :root {
-      --blue:     #1D4ED8;
-      --blue-lt:  #3B82F6;
-      --green:    #15803D;
+      --purple:   #5C2D91;
+      --purple-lt:#8B5CF6;
+      --orange:   #F47920;
+      --orange-lt:#F5A623;
+      --green:    #2D7A4F;
       --green-lt: #16A34A;
-      --grad:     linear-gradient(135deg, #1D4ED8 0%, #15803D 100%);
-      --grad-r:   linear-gradient(135deg, #15803D 0%, #1D4ED8 100%);
-      --dark:     #0F172A;
+      --cream:    #EDD9A3;
+      --grad:     linear-gradient(135deg, #5C2D91 0%, #F47920 100%);
+      --grad-r:   linear-gradient(135deg, #F47920 0%, #5C2D91 100%);
+      --dark:     #1A0A30;
       --mid:      #64748B;
       --border:   #E2E8F0;
-      --surface:  #F1F5F9;
+      --surface:  #F5F0FF;
       --white:    #FFFFFF;
       --radius:   12px;
       --shadow:   0 1px 2px rgba(0,0,0,.06), 0 4px 10px rgba(0,0,0,.07);
       --shadow-lg:0 8px 24px rgba(0,0,0,.13);
-      --amber:    #D97706;
+      --amber:    #F47920;
       --red:      #DC2626;
       --emerald:  #059669;
+
+      /* aliases para não quebrar código existente */
+      --blue:    var(--purple);
+      --blue-lt: var(--purple-lt);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -69,7 +76,7 @@
     .btn:active { transform: scale(.97); }
 
     .btn-primary {
-      background: var(--blue);
+      background: var(--orange);
       color: var(--white);
       width: 100%;
       padding: 15px;
@@ -77,9 +84,9 @@
       font-size: 16px;
       font-weight: 700;
       letter-spacing: .2px;
-      box-shadow: 0 2px 8px rgba(29,78,216,.25);
+      box-shadow: 0 2px 12px rgba(244,121,32,.35);
     }
-    .btn-primary:hover:not(:disabled) { background: #1e40af; }
+    .btn-primary:hover:not(:disabled) { background: #d96a15; }
 
     .btn-primary:disabled { opacity: .55; cursor: not-allowed; }
 
@@ -99,7 +106,7 @@
       padding: 3px 9px;
       border-radius: 100px;
     }
-    .pill-wait     { background: #DBEAFE; color: #1E40AF; }
+    .pill-wait     { background: #EDE9FE; color: #5C2D91; }
     .pill-attend   { background: #FEF3C7; color: #92400E; }
     .pill-done     { background: #D1FAE5; color: #065F46; }
     .pill-alert    { background: #FEE2E2; color: #991B1B; animation: blink 1s infinite; }
@@ -165,8 +172,8 @@
 
     /* --- Header --- */
     .pub-header {
-      background: var(--dark);
-      border-bottom: 1px solid rgba(255,255,255,.06);
+      background: #1A0A30;
+      border-bottom: 2px solid var(--orange);
       padding: 10px 20px;
       display: flex;
       align-items: center;
@@ -174,7 +181,7 @@
       position: sticky;
       top: 0;
       z-index: 50;
-      box-shadow: 0 2px 12px rgba(0,0,0,.25);
+      box-shadow: 0 2px 16px rgba(92,45,145,.4);
     }
 
     .ig-btn {
@@ -194,53 +201,65 @@
 
     /* --- Hero --- */
     .hero {
-      background: linear-gradient(160deg, #0A1628 0%, #0F2444 55%, #0D3320 100%);
+      background: linear-gradient(160deg, #1A0A30 0%, #2D1255 50%, #1C0800 100%);
       padding: 44px 20px 64px;
       text-align: center;
       position: relative;
       overflow: hidden;
     }
+    /* Logo GCA como marca d'água de fundo */
     .hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(29,78,216,.18) 0%, transparent 70%);
+      background: url('gca-logo.png') no-repeat center center / 85% auto;
+      opacity: 0.06;
       pointer-events: none;
+      z-index: 0;
     }
+    /* Pássaro decorativo à direita */
     .hero::after {
       content: '';
       position: absolute;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/svg%3E");
+      right: -10px;
+      bottom: -5px;
+      width: 55%;
+      max-width: 280px;
+      height: 90%;
+      background: url('gca-bird.png') no-repeat right bottom / contain;
+      opacity: 0.18;
       pointer-events: none;
+      z-index: 0;
     }
     .hero-eyebrow {
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 3px;
-      color: rgba(255,255,255,.5);
+      letter-spacing: 4px;
+      color: var(--orange);
       margin-bottom: 12px;
       position: relative;
       z-index: 1;
     }
     .hero-title {
-      font-size: clamp(28px, 9vw, 48px);
-      font-weight: 900;
-      color: #fff;
-      line-height: 1.0;
-      letter-spacing: -1.5px;
-      margin-bottom: 12px;
+      font-family: 'Bangers', cursive;
+      font-size: clamp(52px, 14vw, 80px);
+      font-weight: 400;
+      color: var(--cream);
+      line-height: 0.95;
+      letter-spacing: 3px;
+      text-shadow: 3px 3px 0 var(--purple), 5px 5px 0 rgba(0,0,0,.3);
+      margin-bottom: 16px;
       position: relative;
       z-index: 1;
     }
     .hero-sub {
       font-size: 15px;
-      color: rgba(255,255,255,.65);
+      color: rgba(255,255,255,.7);
       margin-bottom: 24px;
       position: relative;
       z-index: 1;
-      max-width: 320px;
+      max-width: 300px;
       margin-left: auto;
       margin-right: auto;
       line-height: 1.6;
@@ -249,16 +268,17 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.15);
+      background: var(--orange);
+      border: none;
       border-radius: 100px;
-      padding: 9px 20px;
+      padding: 10px 22px;
       font-size: 13px;
-      font-weight: 600;
-      color: rgba(255,255,255,.9);
+      font-weight: 700;
+      color: #fff;
       position: relative;
       z-index: 1;
-      letter-spacing: .2px;
+      letter-spacing: .3px;
+      box-shadow: 0 4px 14px rgba(244,121,32,.4);
     }
 
     /* --- Info Cards --- */
@@ -363,17 +383,19 @@
     .success-sub   { font-size: 14px; color: var(--mid); margin-bottom: 20px; }
 
     .queue-box {
-      background: #F0F7FF;
-      border: 1.5px solid #BFDBFE;
+      background: #F5F0FF;
+      border: 1.5px solid #C4B5FD;
       border-radius: 12px;
       padding: 20px;
       margin-bottom: 16px;
     }
     .q-position {
-      font-size: 56px;
-      font-weight: 900;
-      color: var(--blue);
+      font-family: 'Bangers', cursive;
+      font-size: 64px;
+      font-weight: 400;
+      color: var(--purple);
       line-height: 1;
+      letter-spacing: 2px;
     }
     .q-pos-label { font-size: 12px; color: var(--mid); font-weight: 600; margin-bottom: 14px; }
     .q-time      { font-size: 20px; font-weight: 800; color: var(--dark); }
@@ -434,7 +456,8 @@
        ===  ADMIN VIEW  ===
     ============================================================ */
     .adm-header {
-      background: var(--dark);
+      background: #1A0A30;
+      border-bottom: 2px solid var(--orange);
       color: #fff;
       padding: 14px 20px;
       display: flex;
@@ -447,7 +470,7 @@
     .adm-header-left  { display: flex; align-items: center; gap: 12px; }
     .adm-header-logo  { height: 32px; }
     .adm-title        { font-size: 15px; font-weight: 700; }
-    .adm-badge        { background: #EF4444; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 100px; text-transform: uppercase; letter-spacing: .5px; }
+    .adm-badge        { background: var(--orange); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 100px; text-transform: uppercase; letter-spacing: .5px; }
 
     .adm-body { padding: 16px; padding-bottom: calc(24px + env(safe-area-inset-bottom, 16px)); max-width: 720px; margin: 0 auto; }
 
@@ -515,7 +538,7 @@
     }
     .stat-num   { font-size: 30px; font-weight: 900; line-height: 1; }
     .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: var(--mid); font-weight: 700; margin-top: 4px; }
-    .num-wait   { color: var(--blue); }
+    .num-wait   { color: var(--purple); }
     .num-attend { color: var(--amber); }
     .num-done   { color: var(--emerald); }
 
@@ -533,10 +556,10 @@
       padding: 14px 16px;
     }
     .spotlight-current { background: #FFFBEB; border: 2px solid var(--amber); }
-    .spotlight-next    { background: #EFF6FF; border: 2px solid var(--blue-lt); }
+    .spotlight-next    { background: #F5F0FF; border: 2px solid var(--purple-lt); }
     .spot-label  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 6px; }
     .sc-label    { color: #92400E; }
-    .sn-label    { color: #1E40AF; }
+    .sn-label    { color: #5C2D91; }
     .spot-name   { font-size: 16px; font-weight: 800; color: var(--dark); }
     .spot-empty  { font-size: 13px; color: var(--mid); font-style: italic; }
     .spot-time   { font-size: 12px; color: var(--mid); margin-top: 4px; }
@@ -581,7 +604,7 @@
       border-left: 4px solid transparent;
       transition: border-color .2s;
     }
-    .q-item.status-waiting  { border-left-color: var(--blue-lt); }
+    .q-item.status-waiting  { border-left-color: var(--purple); }
     .q-item.status-attending{ border-left-color: var(--amber); background: #FFFBEB; }
     .q-item.status-done     { border-left-color: var(--emerald); opacity: .7; }
 
