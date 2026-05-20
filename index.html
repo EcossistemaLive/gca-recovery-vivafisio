@@ -845,7 +845,12 @@
         <div style="font-size:11px;color:#94A3B8;">Goiânia Crew Attack</div>
       </div>
     </div>
-    <span class="adm-badge">Staff</span>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span class="adm-badge">Staff</span>
+      <button onclick="resetQueue()" style="background:none;border:1.5px solid rgba(255,255,255,.25);color:rgba(255,255,255,.6);font-size:11px;font-weight:700;padding:4px 11px;border-radius:100px;cursor:pointer;font-family:inherit;letter-spacing:.3px;">
+        🗑 Zerar fila
+      </button>
+    </div>
   </header>
 
   <div class="adm-body">
@@ -1398,6 +1403,29 @@ function exportCSV() {
     }
   });
 })();
+
+/* ═══════════════════════════════════════════════════════════
+   ADMIN — ZERAR FILA (usar antes do evento)
+   ═══════════════════════════════════════════════════════════ */
+async function resetQueue() {
+  const ok = confirm(
+    '⚠️ ZERAR FILA\n\n' +
+    'Isso apaga TODOS os cadastros e reinicia o contador para 1.\n\n' +
+    'Use antes do início do evento. Continuar?'
+  );
+  if (!ok) return;
+
+  const ok2 = confirm('Tem certeza? Essa ação não pode ser desfeita.');
+  if (!ok2) return;
+
+  try {
+    await regRef.remove();
+    await counterRef.set(0);
+    showToast('✅ Fila zerada! Contador reiniciado em 1.');
+  } catch (err) {
+    showToast('❌ Erro ao zerar: ' + err.message);
+  }
+}
 
 /* ═══════════════════════════════════════════════════════════
    BOOT
