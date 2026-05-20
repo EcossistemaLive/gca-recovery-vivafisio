@@ -1084,18 +1084,22 @@ document.getElementById('reg-form').addEventListener('submit', async function(e)
     const mySnap     = await newRef.once('value');
     const myCreatedAt = mySnap.val().createdAt;
 
-    // 3. Conta posição: entradas de hoje, não-concluídas, criadas até o meu momento
+    // 3. Calcula posição com EXATAMENTE o mesmo algoritmo que o painel admin usa para _seq
+    //    - pega todas as entradas de hoje (não-concluídas)
+    //    - ordena por createdAt
+    //    - encontra o índice desta entrada pelo Firebase key
     const dayStart = new Date();
     dayStart.setHours(0, 0, 0, 0);
     const allSnap  = await regRef.once('value');
-    let ordinalPos = 0;
+    const todayItems = [];
     allSnap.forEach(child => {
       const val = child.val();
-      const t   = val.createdAt || 0;
-      if (val.status !== 'done' && t >= dayStart.getTime() && t <= myCreatedAt) {
-        ordinalPos++;
+      if ((val.createdAt || 0) >= dayStart.getTime() && val.status !== 'done') {
+        todayItems.push({ key: child.key, createdAt: val.createdAt || 0 });
       }
     });
+    todayItems.sort((a, b) => a.createdAt - b.createdAt);
+    const ordinalPos = todayItems.findIndex(item => item.key === newRef.key) + 1;
 
     const estTime = calcEstimatedTime(ordinalPos, state.startTime);
     document.getElementById('s-position').textContent = ordinalPos + 'º';
