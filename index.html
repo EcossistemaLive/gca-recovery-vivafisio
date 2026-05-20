@@ -1105,7 +1105,9 @@ document.getElementById('reg-form').addEventListener('submit', async function(e)
     const ordinalPos = todayItems.findIndex(item => item.key === newRef.key) + 1;
 
     const estTime = calcEstimatedTime(ordinalPos, state.startTime);
-    document.getElementById('s-position').textContent = ordinalPos + 'º';
+    // ATENÇÃO: NÃO adicionar "º" aqui — a fonte Bangers renderiza o ordinal como
+    // uma bolinha indistinguível de um zero (1º vira "10", 2º vira "20", etc.)
+    document.getElementById('s-position').textContent = ordinalPos;
     document.getElementById('s-time').textContent     = estTime;
     document.getElementById('section-form').style.display    = 'none';
     document.getElementById('section-success').style.display = 'block';
