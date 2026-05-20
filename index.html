@@ -482,7 +482,8 @@
       flex-wrap: wrap;
     }
     .config-bar label { font-size: 12px; font-weight: 700; color: var(--mid); text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
-    .config-bar input[type="time"] {
+    .config-bar input[type="time"],
+    .config-bar input[type="number"] {
       padding: 7px 11px;
       border: 1.5px solid var(--border);
       border-radius: 8px;
@@ -491,7 +492,9 @@
       font-family: inherit;
       color: var(--dark);
     }
-    .config-bar input[type="time"]:focus { outline: none; border-color: var(--blue); }
+    .config-bar input[type="number"] { width: 64px; text-align: center; }
+    .config-bar input[type="time"]:focus,
+    .config-bar input[type="number"]:focus { outline: none; border-color: var(--blue); }
     .config-save {
       padding: 7px 16px;
       background: var(--blue);
@@ -872,6 +875,8 @@
     <div class="config-bar">
       <label>Início do evento</label>
       <input type="time" id="a-start-time" value="09:00">
+      <label title="Quantas pessoas são atendidas ao mesmo tempo">Macas</label>
+      <input type="number" id="a-slots" min="1" max="20" step="1" value="2">
       <button class="config-save" id="btn-save-config">Salvar</button>
       <button class="notif-btn" id="btn-notif" title="Ativar notificações do navegador">🔔 Alertas</button>
     </div>
@@ -967,8 +972,9 @@ const CONFIG = {
    FIREBASE INIT
    ═══════════════════════════════════════════════════════════ */
 firebase.initializeApp(FIREBASE_CONFIG);
-const db     = firebase.database();
-const regRef = db.ref('registrations');
+const db        = firebase.database();
+const regRef    = db.ref('registrations');
+const configRef = db.ref('config');
 
 /* ═══════════════════════════════════════════════════════════
    STATE
@@ -976,10 +982,40 @@ const regRef = db.ref('registrations');
 const state = {
   isAdmin:           false,
   startTime:         localStorage.getItem('gca_start') || '09:00',
+  slots:             parseInt(localStorage.getItem('gca_slots'), 10) || 2,
   queue:             [],
   notifEnabled:      false,
-  _listenerAttached: false
+  _listenerAttached: false,
+  _configAttached:   false
 };
+
+/* ═══════════════════════════════════════════════════════════
+   CONFIG LISTENER — sincroniza startTime e slots de TODOS os clientes
+   ═══════════════════════════════════════════════════════════ */
+function startConfigListener() {
+  if (state._configAttached) return;
+  state._configAttached = true;
+
+  configRef.on('value', snap => {
+    const cfg = snap.val() || {};
+    if (cfg.startTime && typeof cfg.startTime === 'string') {
+      state.startTime = cfg.startTime;
+      localStorage.setItem('gca_start', cfg.startTime);
+      const inp = document.getElementById('a-start-time');
+      if (inp && document.activeElement !== inp) inp.value = cfg.startTime;
+    }
+    if (cfg.slots && Number(cfg.slots) >= 1) {
+      state.slots = Math.max(1, Math.floor(Number(cfg.slots)));
+      localStorage.setItem('gca_slots', String(state.slots));
+      const inp = document.getElementById('a-slots');
+      if (inp && document.activeElement !== inp) inp.value = state.slots;
+    }
+    // Re-renderiza a fila admin (se aberta) com os novos parâmetros
+    if (state.isAdmin && state.queue.length) renderQueue();
+  });
+}
+// Sobe o listener de config imediatamente — afeta admin e público
+startConfigListener();
 
 /* ═══════════════════════════════════════════════════════════
    UTILS
@@ -1003,11 +1039,21 @@ function formatPhone(raw) {
   return d;
 }
 
-function calcEstimatedTime(position, startTimeStr) {
+/**
+ * Calcula horário previsto considerando atendimentos simultâneos.
+ *
+ * Modelo: "ondas" de tamanho `slots`. Posição P pertence à onda
+ * ceil(P / slots) e inicia em base + (onda - 1) * DURATION_MIN.
+ *
+ * Ex.: slots=2 → posições 1 e 2 começam juntas, 3 e 4 começam 20min depois.
+ */
+function calcEstimatedTime(position, startTimeStr, slotsOverride) {
+  const slots = Math.max(1, Math.floor(slotsOverride || state.slots || 1));
   const [h, m] = startTimeStr.split(':').map(Number);
   const base = new Date();
   base.setHours(h, m, 0, 0);
-  const ms = base.getTime() + (position - 1) * CONFIG.DURATION_MIN * 60000;
+  const wave = Math.ceil(position / slots);          // 1, 2, 3...
+  const ms = base.getTime() + (wave - 1) * CONFIG.DURATION_MIN * 60000;
   return new Date(ms).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 }
 
@@ -1150,8 +1196,18 @@ function startAdminListener() {
     });
     // Ordena por createdAt (mais antigo primeiro)
     items.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-    // Reatribui posição sequencial baseada na ordem real de chegada
-    items.forEach((item, i) => { item._seq = i + 1; });
+    // _seq = posição cronológica (inclui concluídos) — usado só para mostrar histórico
+    // _activeSeq = posição entre os ativos (waiting + attending) — usado para CÁLCULO DE TEMPO
+    let activeCounter = 0;
+    items.forEach((item, i) => {
+      item._seq = i + 1;
+      if (item.status !== 'done') {
+        activeCounter++;
+        item._activeSeq = activeCounter;
+      } else {
+        item._activeSeq = null;
+      }
+    });
     state.queue = items;
     renderQueue();
   }, err => {
@@ -1167,12 +1223,24 @@ function loadQueue() {
 /* ═══════════════════════════════════════════════════════════
    ADMIN — CONFIG
    ═══════════════════════════════════════════════════════════ */
-document.getElementById('btn-save-config').addEventListener('click', function() {
-  const val = document.getElementById('a-start-time').value;
-  if (!val) return;
-  state.startTime = val;
-  localStorage.setItem('gca_start', val);
-  showToast('✅ Horário de início salvo: ' + val);
+document.getElementById('btn-save-config').addEventListener('click', async function() {
+  const startVal = document.getElementById('a-start-time').value;
+  const slotsVal = Math.max(1, Math.floor(Number(document.getElementById('a-slots').value) || 1));
+  if (!startVal) return;
+
+  // Atualiza estado local imediatamente (UX)
+  state.startTime = startVal;
+  state.slots     = slotsVal;
+  localStorage.setItem('gca_start', startVal);
+  localStorage.setItem('gca_slots', String(slotsVal));
+
+  // Sincroniza para TODOS os clientes (admin + público) via Firebase
+  try {
+    await configRef.update({ startTime: startVal, slots: slotsVal });
+    showToast(`✅ Salvo — Início ${startVal} · ${slotsVal} maca${slotsVal > 1 ? 's' : ''}`);
+  } catch (err) {
+    showToast('⚠️ Salvou localmente, mas não sincronizou: ' + err.message);
+  }
   renderQueue();
 });
 
@@ -1236,17 +1304,16 @@ function renderQueue() {
   updateStats(waiting, attending, done);
   updateSpotlights(currentItem, nextItem);
 
-  let waitPos = 0;
   const html = queue.map(item => {
     const isWaiting   = item.status === 'waiting';
     const isAttending = item.status === 'attending';
     const isDone      = item.status === 'done';
     const id          = item.id;
 
-    if (isWaiting) waitPos++;
-
+    // Tempo é calculado pela posição ATIVA (já considera atendimentos simultâneos
+    // via calcEstimatedTime, que divide pela quantidade de macas)
     const estTime    = isWaiting
-      ? calcEstimatedTime(waitPos + (attending > 0 ? 1 : 0), start)
+      ? calcEstimatedTime(item._activeSeq, start)
       : (isAttending ? 'Em atendimento' : 'Concluído');
     const minsUntil  = isWaiting ? minutesUntil(estTime) : 999;
     const needsAlert = isWaiting && minsUntil <= 5 && minsUntil >= -2;
@@ -1331,7 +1398,7 @@ function updateSpotlights(current, next) {
 
   if (next) {
     nn.innerHTML   = `<strong>${esc(next.name)}</strong>`;
-    nt.textContent = '🕐 Previsto: ' + calcEstimatedTime(next._seq, state.startTime);
+    nt.textContent = '🕐 Previsto: ' + calcEstimatedTime(next._activeSeq || next._seq, state.startTime);
   } else {
     nn.innerHTML   = '<span class="spot-empty">Fila vazia</span>';
     nt.textContent = '';
