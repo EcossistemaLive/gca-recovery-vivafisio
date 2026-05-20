@@ -143,25 +143,21 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .logo-wrap {
-      width: 170px;
-      height: 52px;
       border-radius: 10px;
       overflow: hidden;
       background: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 4px 8px;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       flex-shrink: 0;
     }
     .logo-img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
       display: block;
+      height: auto;
+      width: 100%;
     }
 
     /* ============================================================
@@ -702,8 +698,8 @@
   <!-- Header -->
   <header class="pub-header">
     <!-- Logo Viva Fisio — ícone + texto em linha única -->
-    <div id="logo-tap" class="logo-wrap">
-      <img src="logo.png" alt="Viva Fisio" class="logo-img">
+    <div id="logo-tap" class="logo-wrap" style="width:200px;height:62px;">
+      <img src="logo.png" alt="Viva Fisio" class="logo-img" style="height:176px;width:auto;max-width:none;">
     </div>
 
     <a href="https://www.instagram.com/vivafisiogoiania/" target="_blank" rel="noopener" class="ig-btn">
@@ -851,8 +847,8 @@
   <header class="adm-header">
     <div class="adm-header-left">
       <!-- Compact logo admin -->
-      <div class="logo-wrap" style="width:120px;height:42px;">
-        <img src="logo.png" alt="Viva Fisio" class="logo-img" style="height:112px;">
+      <div class="logo-wrap" style="width:150px;height:48px;">
+        <img src="logo.png" alt="Viva Fisio" class="logo-img" style="height:134px;width:auto;max-width:none;">
       </div>
       <div>
         <div class="adm-title">Painel da Fila</div>
