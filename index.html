@@ -1073,7 +1073,7 @@ document.getElementById('reg-form').addEventListener('submit', async function(e)
   submitBtn.innerHTML = '<span class="spinner"></span> Cadastrando…';
 
   try {
-    // Contador atômico — sem race condition entre usuários simultâneos
+    // Contador atômico — define a ordem de chegada (não é afetado por deleções)
     const txResult = await counterRef.transaction(n => (n || 0) + 1);
     const position = txResult.snapshot.val();
 
@@ -1088,8 +1088,16 @@ document.getElementById('reg-form').addEventListener('submit', async function(e)
       createdAt: firebase.database.ServerValue.TIMESTAMP
     });
 
-    const estTime = calcEstimatedTime(position, state.startTime);
-    document.getElementById('s-position').textContent = position + 'º';
+    // Posição REAL na fila: conta apenas quem ainda não foi concluído
+    const allSnap = await regRef.once('value');
+    let ordinalPos = 0;
+    allSnap.forEach(child => {
+      const s = child.val().status || 'waiting';
+      if (s !== 'done') ordinalPos++;
+    });
+
+    const estTime = calcEstimatedTime(ordinalPos, state.startTime);
+    document.getElementById('s-position').textContent = ordinalPos + 'º';
     document.getElementById('s-time').textContent     = estTime;
     document.getElementById('section-form').style.display    = 'none';
     document.getElementById('section-success').style.display = 'block';
@@ -1433,9 +1441,8 @@ async function resetQueue() {
   if (!ok2) return;
 
   try {
-    await regRef.remove();
-    await counterRef.set(0);
-    showToast('✅ Fila zerada! Contador reiniciado em 1.');
+    await Promise.all([regRef.remove(), counterRef.remove()]);
+    showToast('✅ Fila zerada! Próximo cadastro será posição 1.');
   } catch (err) {
     showToast('❌ Erro ao zerar: ' + err.message);
   }
