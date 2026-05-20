@@ -207,27 +207,26 @@
       position: relative;
       overflow: hidden;
     }
-    /* Logo GCA como marca d'água de fundo */
+    /* Glow roxo no topo */
     .hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: url('gca-logo.png') no-repeat center center / 85% auto;
-      opacity: 0.06;
+      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(92,45,145,.35) 0%, transparent 70%);
       pointer-events: none;
       z-index: 0;
     }
-    /* Pássaro decorativo à direita */
+    /* Selo GCA decorativo à direita */
     .hero::after {
       content: '';
       position: absolute;
-      right: -10px;
-      bottom: -5px;
-      width: 55%;
-      max-width: 280px;
-      height: 90%;
+      right: -20px;
+      bottom: -10px;
+      width: 62%;
+      max-width: 300px;
+      height: 95%;
       background: url('gca-bird.png') no-repeat right bottom / contain;
-      opacity: 0.18;
+      opacity: 0.22;
       pointer-events: none;
       z-index: 0;
     }
