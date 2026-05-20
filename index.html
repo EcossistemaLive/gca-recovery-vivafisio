@@ -968,9 +968,8 @@ const CONFIG = {
    FIREBASE INIT
    ═══════════════════════════════════════════════════════════ */
 firebase.initializeApp(FIREBASE_CONFIG);
-const db          = firebase.database();
-const regRef      = db.ref('registrations');
-const counterRef  = db.ref('meta/nextPosition');
+const db     = firebase.database();
+const regRef = db.ref('registrations');
 
 /* ═══════════════════════════════════════════════════════════
    STATE
@@ -1073,27 +1072,33 @@ document.getElementById('reg-form').addEventListener('submit', async function(e)
   submitBtn.innerHTML = '<span class="spinner"></span> Cadastrando…';
 
   try {
-    // Contador atômico — define a ordem de chegada (não é afetado por deleções)
-    const txResult = await counterRef.transaction(n => (n || 0) + 1);
-    const position = txResult.snapshot.val();
-
     const ig = instagram.startsWith('@') ? instagram : '@' + instagram;
 
-    await regRef.push({
+    // 1. Grava o cadastro — sem contador, só timestamp do servidor
+    const newRef = regRef.push();
+    await newRef.set({
       name,
       phone,
       instagram: ig,
       status:    'waiting',
-      position,
       createdAt: firebase.database.ServerValue.TIMESTAMP
     });
 
-    // Posição REAL na fila: conta apenas quem ainda não foi concluído
-    const allSnap = await regRef.once('value');
+    // 2. Lê de volta para obter o timestamp real atribuído pelo servidor
+    const mySnap     = await newRef.once('value');
+    const myCreatedAt = mySnap.val().createdAt;
+
+    // 3. Conta posição: entradas de hoje, não-concluídas, criadas até o meu momento
+    const dayStart = new Date();
+    dayStart.setHours(0, 0, 0, 0);
+    const allSnap  = await regRef.once('value');
     let ordinalPos = 0;
     allSnap.forEach(child => {
-      const s = child.val().status || 'waiting';
-      if (s !== 'done') ordinalPos++;
+      const val = child.val();
+      const t   = val.createdAt || 0;
+      if (val.status !== 'done' && t >= dayStart.getTime() && t <= myCreatedAt) {
+        ordinalPos++;
+      }
     });
 
     const estTime = calcEstimatedTime(ordinalPos, state.startTime);
@@ -1125,11 +1130,23 @@ function startAdminListener() {
   if (state._listenerAttached) return;
   state._listenerAttached = true;
 
-  regRef.orderByChild('position').on('value', snapshot => {
+  regRef.orderByChild('createdAt').on('value', snapshot => {
     const items = [];
+    // Considera apenas cadastros de hoje
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const dayStart = startOfDay.getTime();
+
     snapshot.forEach(child => {
-      items.push({ id: child.key, ...child.val() });
+      const val = child.val();
+      if ((val.createdAt || 0) >= dayStart) {
+        items.push({ id: child.key, ...val });
+      }
     });
+    // Ordena por createdAt (mais antigo primeiro)
+    items.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+    // Reatribui posição sequencial baseada na ordem real de chegada
+    items.forEach((item, i) => { item._seq = i + 1; });
     state.queue = items;
     renderQueue();
   }, err => {
@@ -1238,10 +1255,10 @@ function renderQueue() {
     }
 
     return `
-      <div class="q-item status-${item.status}" id="qi-${item.position}">
+      <div class="q-item status-${item.status}" id="qi-${item._seq}">
         <div class="q-item-inner">
           <div class="qi-row1">
-            <div class="qi-num">${item.position}</div>
+            <div class="qi-num">${item._seq}</div>
             <div class="qi-name">${esc(item.name)}</div>
             ${needsAlert
               ? '<span class="pill pill-alert">⚠️ Avisar!</span>'
@@ -1309,7 +1326,7 @@ function updateSpotlights(current, next) {
 
   if (next) {
     nn.innerHTML   = `<strong>${esc(next.name)}</strong>`;
-    nt.textContent = '🕐 Previsto: ' + calcEstimatedTime(next.position, state.startTime);
+    nt.textContent = '🕐 Previsto: ' + calcEstimatedTime(next._seq, state.startTime);
   } else {
     nn.innerHTML   = '<span class="spot-empty">Fila vazia</span>';
     nt.textContent = '';
@@ -1441,7 +1458,7 @@ async function resetQueue() {
   if (!ok2) return;
 
   try {
-    await Promise.all([regRef.remove(), counterRef.remove()]);
+    await regRef.remove();
     showToast('✅ Fila zerada! Próximo cadastro será posição 1.');
   } catch (err) {
     showToast('❌ Erro ao zerar: ' + err.message);
