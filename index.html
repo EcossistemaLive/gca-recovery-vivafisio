@@ -737,7 +737,7 @@
       <div class="info-card">
         <div class="ic-icon">⏱️</div>
         <div class="ic-label">Duração</div>
-        <div class="ic-value">~20 min<br>por atleta</div>
+        <div class="ic-value">~15 min<br>por atleta</div>
       </div>
       <div class="info-card">
         <div class="ic-icon">🏃</div>
@@ -965,7 +965,7 @@ const FIREBASE_CONFIG = {
 const CONFIG = {
   ADMIN_KEY:      'AdminViva',
   EVENT_LOCATION: 'Tenda da Viva Fisio',
-  DURATION_MIN:   20
+  DURATION_MIN:   15
 };
 
 /* ═══════════════════════════════════════════════════════════
@@ -1045,7 +1045,7 @@ function formatPhone(raw) {
  * Modelo: "ondas" de tamanho `slots`. Posição P pertence à onda
  * ceil(P / slots) e inicia em base + (onda - 1) * DURATION_MIN.
  *
- * Ex.: slots=2 → posições 1 e 2 começam juntas, 3 e 4 começam 20min depois.
+ * Ex.: slots=2 → posições 1 e 2 começam juntas, 3 e 4 começam 15min depois.
  */
 function calcEstimatedTime(position, startTimeStr, slotsOverride) {
   const slots = Math.max(1, Math.floor(slotsOverride || state.slots || 1));
