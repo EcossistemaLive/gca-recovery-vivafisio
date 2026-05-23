@@ -279,10 +279,8 @@
     /* --- Info Cards --- */
     .info-wrap {
       padding: 0 16px;
-      margin-top: -28px;
+      margin-top: 20px;
       margin-bottom: 20px;
-      position: relative;
-      z-index: 2;
     }
     .info-grid {
       display: grid;
@@ -684,6 +682,143 @@
       .qi-actions { gap: 6px; }
       .btn { font-size: 12px; padding: 8px 13px; }
     }
+
+    /* Mobile — hero mais compacto para o formulário aparecer sem scroll */
+    @media (max-width: 600px) {
+      .hero { padding: 20px 20px 32px; }
+      .hero-title { font-size: clamp(42px, 11vw, 62px); margin-bottom: 10px; }
+      .hero-sub   { margin-bottom: 14px; font-size: 14px; }
+      .hero-badge { font-size: 12px; padding: 8px 16px; }
+    }
+
+    /* Success — dica WhatsApp */
+    .q-notif-hint {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #F0FDF4;
+      border: 1.5px solid #86EFAC;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-top: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #166534;
+      line-height: 1.4;
+      text-align: left;
+    }
+
+    /* ============================================================
+       CRONÔMETRO DE ATENDIMENTO (Admin)
+    ============================================================ */
+    .timer-card {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      margin-bottom: 16px;
+      border: 2px solid transparent;
+      transition: border-color .3s;
+    }
+    .timer-card.tc-running { border-color: var(--emerald); }
+    .timer-card.tc-expired { border-color: var(--red); }
+
+    .timer-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--mid);
+      margin-bottom: 8px;
+    }
+
+    .timer-display {
+      font-family: 'Bangers', cursive;
+      font-size: 64px;
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 4px;
+      color: var(--dark);
+      text-align: center;
+      margin: 4px 0 12px;
+      transition: color .3s;
+    }
+    .timer-display.td-running { color: var(--emerald); }
+    .timer-display.td-warning { color: var(--amber); }
+    .timer-display.td-expired { color: var(--red); }
+
+    .timer-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .timer-dur-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 6px 12px;
+      border: 1.5px solid var(--border);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--mid);
+    }
+    .timer-dur-wrap input {
+      width: 48px;
+      border: none;
+      background: transparent;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: inherit;
+      color: var(--dark);
+      text-align: center;
+    }
+    .timer-dur-wrap input:focus { outline: none; }
+    .btn-ts  { background: var(--emerald); color: #fff; }
+    .btn-tp  { background: var(--amber);   color: #fff; }
+    .btn-tr  { background: none; border: 1.5px solid var(--border); color: var(--mid); }
+
+    /* Cronômetro INDIVIDUAL por paciente em atendimento */
+    .ptimer-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #FFFBEB;
+      border: 1.5px solid var(--amber);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+    }
+    .ptimer-wrap.pt-ok      { background: #F0FDF4; border-color: var(--emerald); }
+    .ptimer-wrap.pt-warning { background: #FEF3C7; border-color: var(--amber); }
+    .ptimer-wrap.pt-expired { background: #FEF2F2; border-color: var(--red); animation: blink .7s infinite; }
+    .ptimer {
+      font-family: 'Bangers', cursive;
+      font-size: 30px;
+      letter-spacing: 2px;
+      line-height: 1;
+      color: var(--emerald);
+      min-width: 62px;
+      transition: color .3s;
+    }
+    .ptimer.pt-warning { color: var(--amber); }
+    .ptimer.pt-expired  { color: var(--red); }
+    .ptimer-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--mid);
+      flex: 1;
+    }
+    .ptimer-badge {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--red);
+    }
   </style>
 </head>
 <body>
@@ -726,45 +861,8 @@
     </div>
   </section>
 
-  <!-- Info Cards -->
-  <div class="info-wrap">
-    <div class="info-grid">
-      <div class="info-card">
-        <div class="ic-icon">📍</div>
-        <div class="ic-label">Local</div>
-        <div class="ic-value">Tenda da<br>Viva Fisio</div>
-      </div>
-      <div class="info-card">
-        <div class="ic-icon">⏱️</div>
-        <div class="ic-label">Duração</div>
-        <div class="ic-value">~15 min<br>por atleta</div>
-      </div>
-      <div class="info-card">
-        <div class="ic-icon">🏃</div>
-        <div class="ic-label">Serviço</div>
-        <div class="ic-value">Recovery<br>Esportivo</div>
-      </div>
-      <div class="info-card">
-        <div class="ic-icon">✅</div>
-        <div class="ic-label">Ordem</div>
-        <div class="ic-value">Por ordem<br>de cadastro</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Banner Instagram -->
-  <div class="form-wrap" style="padding-bottom:0;">
-    <a href="https://www.instagram.com/vivafisiogoiania/" target="_blank" rel="noopener"
-       style="display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#5C2D91,#F47920);border-radius:12px;padding:14px 18px;text-decoration:none;color:#fff;font-weight:700;font-size:14px;box-shadow:0 4px 14px rgba(92,45,145,.3);margin-bottom:12px;">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">
-        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-      </svg>
-      <span>Siga-nos no Instagram e ganhe uma sessão de recovery grátis! 🎁</span>
-    </a>
-  </div>
-
-  <!-- Registration Form -->
-  <div id="section-form" class="form-wrap">
+  <!-- Registration Form — aparece logo abaixo do hero no mobile -->
+  <div id="section-form" class="form-wrap" style="padding-top:16px;">
     <div class="form-card">
       <div class="form-header">
         <h2 class="form-title">Garanta sua vaga 🎯</h2>
@@ -807,8 +905,10 @@
       <div class="queue-box">
         <div class="q-position" id="s-position">—</div>
         <div class="q-pos-label">Sua posição na fila</div>
-        <div class="q-time" id="s-time">—</div>
-        <div class="q-time-label">Horário previsto</div>
+        <div class="q-notif-hint">
+          <span style="font-size:22px;flex-shrink:0">📱</span>
+          <span>Você será avisado pelo WhatsApp quando for a sua vez</span>
+        </div>
       </div>
 
       <div class="loc-box">
@@ -823,6 +923,43 @@
         Errou algum dado? <button id="btn-reregister" type="button">Cadastrar novamente</button>
       </div>
     </div>
+  </div>
+
+  <!-- Info Cards -->
+  <div class="info-wrap">
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="ic-icon">📍</div>
+        <div class="ic-label">Local</div>
+        <div class="ic-value">Tenda da<br>Viva Fisio</div>
+      </div>
+      <div class="info-card">
+        <div class="ic-icon">⏱️</div>
+        <div class="ic-label">Duração</div>
+        <div class="ic-value">~15 min<br>por atleta</div>
+      </div>
+      <div class="info-card">
+        <div class="ic-icon">🏃</div>
+        <div class="ic-label">Serviço</div>
+        <div class="ic-value">Recovery<br>Esportivo</div>
+      </div>
+      <div class="info-card">
+        <div class="ic-icon">✅</div>
+        <div class="ic-label">Ordem</div>
+        <div class="ic-value">Por ordem<br>de cadastro</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Banner Instagram -->
+  <div class="form-wrap" style="padding-bottom:0;">
+    <a href="https://www.instagram.com/vivafisiogoiania/" target="_blank" rel="noopener"
+       style="display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#5C2D91,#F47920);border-radius:12px;padding:14px 18px;text-decoration:none;color:#fff;font-weight:700;font-size:14px;box-shadow:0 4px 14px rgba(92,45,145,.3);margin-bottom:12px;">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+      </svg>
+      <span>Siga-nos no Instagram e ganhe uma sessão de recovery grátis! 🎁</span>
+    </a>
   </div>
 
   <!-- Footer -->
@@ -879,6 +1016,21 @@
       <input type="number" id="a-slots" min="1" max="20" step="1" value="2">
       <button class="config-save" id="btn-save-config">Salvar</button>
       <button class="notif-btn" id="btn-notif" title="Ativar notificações do navegador">🔔 Alertas</button>
+    </div>
+
+    <!-- Cronômetro de Atendimento -->
+    <div class="timer-card" id="timer-card">
+      <div class="timer-label">⏱️ Cronômetro de Atendimento</div>
+      <div class="timer-display" id="timer-display">07:00</div>
+      <div class="timer-controls">
+        <div class="timer-dur-wrap">
+          <label for="timer-min">Min</label>
+          <input type="number" id="timer-min" min="1" max="60" value="7">
+        </div>
+        <button class="btn btn-ts" id="btn-timer-start" onclick="timerStart()">▶ Iniciar</button>
+        <button class="btn btn-tp" id="btn-timer-pause" onclick="timerPause()" style="display:none">⏸ Pausar</button>
+        <button class="btn btn-tr" id="btn-timer-reset" onclick="timerReset()">↺ Reset</button>
+      </div>
     </div>
 
     <!-- Stats -->
@@ -1150,11 +1302,8 @@ document.getElementById('reg-form').addEventListener('submit', async function(e)
     todayItems.sort((a, b) => a.createdAt - b.createdAt);
     const ordinalPos = todayItems.findIndex(item => item.key === newRef.key) + 1;
 
-    const estTime = calcEstimatedTime(ordinalPos, state.startTime);
-    // ATENÇÃO: NÃO adicionar "º" aqui — a fonte Bangers renderiza o ordinal como
-    // uma bolinha indistinguível de um zero (1º vira "10", 2º vira "20", etc.)
+    // Posição na fila — sem previsão de horário
     document.getElementById('s-position').textContent = ordinalPos;
-    document.getElementById('s-time').textContent     = estTime;
     document.getElementById('section-form').style.display    = 'none';
     document.getElementById('section-success').style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1265,7 +1414,15 @@ document.getElementById('btn-notif').addEventListener('click', async function() 
    ═══════════════════════════════════════════════════════════ */
 async function setStatus(id, status) {
   try {
-    await db.ref('registrations/' + id).update({ status });
+    const updates = { status };
+    if (status === 'attending') {
+      // Registra o momento exato em que o atendimento começou (timestamp do servidor)
+      updates.attendingStartedAt = firebase.database.ServerValue.TIMESTAMP;
+    } else {
+      // Limpa o timestamp ao sair do atendimento
+      updates.attendingStartedAt = null;
+    }
+    await db.ref('registrations/' + id).update(updates);
     const labels = { attending: '▶ Em atendimento', done: '✅ Concluído', waiting: '↩ Reaberto' };
     showToast(labels[status] || 'Atualizado');
   } catch (err) {
@@ -1347,6 +1504,13 @@ function renderQueue() {
                   : ''}</span>`
               : ''}
           </div>
+          ${isAttending ? `
+            <div class="ptimer-wrap" id="ptimer-wrap-${id}">
+              <span class="ptimer" id="ptimer-${id}">00:00</span>
+              <span class="ptimer-label">em atendimento</span>
+              <span class="ptimer-badge" id="ptimer-badge-${id}"></span>
+            </div>
+          ` : ''}
           <div class="qi-actions">
             ${isWaiting || isAttending ? `
               <a href="${buildWaLink(item.phone, item.name)}"
@@ -1380,6 +1544,8 @@ function renderQueue() {
   }).join('');
 
   list.innerHTML = html;
+  // Inicia/mantém o loop de atualização dos cronômetros individuais
+  startPatientTimerPolling();
 }
 
 function updateSpotlights(current, next) {
@@ -1535,6 +1701,190 @@ async function resetQueue() {
   } catch (err) {
     showToast('❌ Erro ao zerar: ' + err.message);
   }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ADMIN — CRONÔMETRO DE ATENDIMENTO
+   ═══════════════════════════════════════════════════════════ */
+const timerState = {
+  interval: null,
+  remaining: 7 * 60,  // segundos (padrão: 7 min)
+  running: false
+};
+
+function timerUpdateDisplay() {
+  const m = Math.floor(timerState.remaining / 60);
+  const s = timerState.remaining % 60;
+  const txt = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  const el  = document.getElementById('timer-display');
+  const card = document.getElementById('timer-card');
+  if (!el) return;
+  el.textContent = txt;
+  el.className   = 'timer-display';
+  card.className = 'timer-card';
+  if (timerState.running) {
+    if (timerState.remaining <= 30)  { el.classList.add('td-expired');  card.classList.add('tc-expired'); }
+    else if (timerState.remaining <= 60) { el.classList.add('td-warning'); }
+    else { el.classList.add('td-running'); card.classList.add('tc-running'); }
+  }
+}
+
+function timerStart() {
+  if (timerState.running) return;
+  if (timerState.remaining <= 0) {
+    const mins = parseInt(document.getElementById('timer-min').value, 10) || 7;
+    timerState.remaining = Math.max(1, mins) * 60;
+  }
+  timerState.running = true;
+  document.getElementById('btn-timer-start').style.display = 'none';
+  document.getElementById('btn-timer-pause').style.display = '';
+  timerUpdateDisplay();
+  timerState.interval = setInterval(() => {
+    timerState.remaining--;
+    timerUpdateDisplay();
+    if (timerState.remaining <= 0) timerExpired();
+  }, 1000);
+}
+
+function timerPause() {
+  clearInterval(timerState.interval);
+  timerState.running = false;
+  document.getElementById('btn-timer-start').style.display = '';
+  document.getElementById('btn-timer-pause').style.display = 'none';
+  document.getElementById('timer-card').className = 'timer-card';
+  document.getElementById('timer-display').className = 'timer-display';
+}
+
+function timerReset() {
+  clearInterval(timerState.interval);
+  timerState.running = false;
+  const mins = parseInt(document.getElementById('timer-min').value, 10) || 7;
+  timerState.remaining = Math.max(1, mins) * 60;
+  timerUpdateDisplay();
+  document.getElementById('btn-timer-start').style.display = '';
+  document.getElementById('btn-timer-pause').style.display = 'none';
+  document.getElementById('timer-card').className = 'timer-card';
+  document.getElementById('timer-display').className = 'timer-display';
+}
+
+function timerExpired() {
+  clearInterval(timerState.interval);
+  timerState.running = false;
+  timerState.remaining = 0;
+  document.getElementById('btn-timer-start').style.display = '';
+  document.getElementById('btn-timer-pause').style.display = 'none';
+  document.getElementById('timer-card').className = 'timer-card tc-expired';
+  document.getElementById('timer-display').className = 'timer-display td-expired';
+  document.getElementById('timer-display').textContent = '00:00';
+
+  // Alerta sonoro — 4 bipes
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.32, 0.64, 0.96].forEach(delay => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.frequency.value = 880;
+      osc.type = 'sine';
+      gain.gain.setValueAtTime(0.45, ctx.currentTime + delay);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.28);
+      osc.start(ctx.currentTime + delay);
+      osc.stop(ctx.currentTime + delay + 0.28);
+    });
+  } catch (e) {}
+
+  // Notificação do navegador
+  if (state.notifEnabled) {
+    try {
+      new Notification('⏰ Tempo esgotado!', { body: 'Hora de rotacionar os atletas!' });
+    } catch (e) {}
+  }
+
+  showToast('⏰ Tempo esgotado! Hora de trocar os atletas!', 4000);
+}
+
+// Atualiza display quando duração é alterada (fora do modo running)
+document.getElementById('timer-min').addEventListener('input', function() {
+  if (!timerState.running) timerReset();
+});
+
+/* ═══════════════════════════════════════════════════════════
+   CRONÔMETROS INDIVIDUAIS POR PACIENTE
+   ═══════════════════════════════════════════════════════════ */
+let _patientPollInterval = null;
+const _patientAlerted    = new Set(); // IDs que já dispararam o alerta de tempo
+
+function startPatientTimerPolling() {
+  if (_patientPollInterval) return;          // já está rodando
+  _patientPollInterval = setInterval(updatePatientTimers, 1000);
+}
+
+function updatePatientTimers() {
+  const now          = Date.now();
+  const durationSecs = Math.max(1, parseInt(document.getElementById('timer-min')?.value || 7, 10)) * 60;
+
+  state.queue.forEach(item => {
+    if (item.status !== 'attending' || !item.attendingStartedAt) return;
+
+    const elapsedSecs = Math.floor((now - item.attendingStartedAt) / 1000);
+    const m   = Math.floor(elapsedSecs / 60);
+    const s   = elapsedSecs % 60;
+    const txt = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+
+    const timerEl = document.getElementById('ptimer-'      + item.id);
+    const wrapEl  = document.getElementById('ptimer-wrap-' + item.id);
+    const badgeEl = document.getElementById('ptimer-badge-' + item.id);
+    if (!timerEl || !wrapEl) return;
+
+    timerEl.textContent = txt;
+
+    const pct = elapsedSecs / durationSecs;
+
+    // Cores progressivas: verde → amarelo (80%) → vermelho piscando (100%)
+    if (pct >= 1.0) {
+      timerEl.className = 'ptimer pt-expired';
+      wrapEl.className  = 'ptimer-wrap pt-expired';
+      if (badgeEl) badgeEl.textContent = '⚠️ TEMPO!';
+
+      // Dispara alerta apenas uma vez por paciente
+      if (!_patientAlerted.has(item.id)) {
+        _patientAlerted.add(item.id);
+
+        showToast(`⏰ ${item.name} — tempo esgotado! (${m}min)`, 4000);
+
+        // Som: 2 bipes
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          [0, 0.35].forEach(delay => {
+            const osc = ctx.createOscillator();
+            const g   = ctx.createGain();
+            osc.connect(g); g.connect(ctx.destination);
+            osc.frequency.value = 880; osc.type = 'sine';
+            g.gain.setValueAtTime(0.4, ctx.currentTime + delay);
+            g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.3);
+            osc.start(ctx.currentTime + delay);
+            osc.stop(ctx.currentTime + delay + 0.3);
+          });
+        } catch (e) {}
+
+        if (state.notifEnabled) {
+          try { new Notification('⏰ Tempo esgotado!', { body: `${item.name} — ${m}min em atendimento.` }); }
+          catch (e) {}
+        }
+      }
+    } else if (pct >= 0.8) {
+      timerEl.className = 'ptimer pt-warning';
+      wrapEl.className  = 'ptimer-wrap pt-warning';
+      if (badgeEl) badgeEl.textContent = '';
+      _patientAlerted.delete(item.id); // permite re-alertar se reiniciar
+    } else {
+      timerEl.className = 'ptimer';
+      wrapEl.className  = 'ptimer-wrap pt-ok';
+      if (badgeEl) badgeEl.textContent = '';
+      _patientAlerted.delete(item.id);
+    }
+  });
 }
 
 /* ═══════════════════════════════════════════════════════════
