@@ -197,18 +197,18 @@
 
     /* --- Hero --- */
     .hero {
-      background: linear-gradient(160deg, #1A0A30 0%, #2D1255 50%, #1C0800 100%);
+      background: var(--dark);
       padding: 44px 20px 64px;
       text-align: center;
       position: relative;
       overflow: hidden;
     }
-    /* Glow roxo no topo */
+    /* Glow verde/laranja no topo */
     .hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(92,45,145,.35) 0%, transparent 70%);
+      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(102,157,116,.25) 0%, transparent 70%);
       pointer-events: none;
       z-index: 0;
     }
