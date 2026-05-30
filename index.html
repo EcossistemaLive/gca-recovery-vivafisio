@@ -1298,10 +1298,21 @@
         <div style="font-size:11px;color:#94A3B8;">Session Overall</div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <span class="adm-badge">Staff</span>
-      <button onclick="resetQueue()" style="background:none;border:1.5px solid rgba(255,255,255,.25);color:rgba(255,255,255,.6);font-size:11px;font-weight:700;padding:4px 11px;border-radius:100px;cursor:pointer;font-family:inherit;letter-spacing:.3px;">
-        🗑 Zerar fila
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:60%;">
+      <button onclick="loadQueue()" id="btn-refresh" style="background:none;border:1.5px solid rgba(255,255,255,.25);color:rgba(255,255,255,.9);font-size:10px;font-weight:700;padding:4px 8px;border-radius:100px;cursor:pointer;font-family:inherit;letter-spacing:.3px;display:flex;align-items:center;gap:4px;">
+        <svg id="refresh-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+        Atualizar
+      </button>
+      <button onclick="exportCSV()" style="background:none;border:1.5px solid rgba(255,255,255,.25);color:rgba(255,255,255,.9);font-size:10px;font-weight:700;padding:4px 8px;border-radius:100px;cursor:pointer;font-family:inherit;letter-spacing:.3px;display:flex;align-items:center;gap:4px;">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Exportar
+      </button>
+      <button onclick="resetQueue()" style="background:none;border:1.5px solid rgba(255,255,255,.25);color:var(--red);font-size:10px;font-weight:700;padding:4px 8px;border-radius:100px;cursor:pointer;font-family:inherit;letter-spacing:.3px;">
+        🗑 Zerar
       </button>
     </div>
   </header>
@@ -1376,20 +1387,6 @@
     <!-- Queue list -->
     <div class="queue-section-title">
       <span>Fila completa</span>
-      <div style="display:flex;gap:8px;">
-        <button class="refresh-btn" id="btn-refresh" onclick="loadQueue()">
-          <svg id="refresh-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-          </svg>
-          Atualizar
-        </button>
-        <button class="refresh-btn" onclick="exportCSV()" title="Exportar planilha CSV">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
-          Exportar
-        </button>
-      </div>
     </div>
     <div class="queue-list" id="a-queue-list">
       <div class="empty"><div class="empty-icon">🏃</div><div class="empty-text">Carregando fila…</div></div>
@@ -2036,6 +2033,7 @@ function renderQueue() {
             </div>
           ` : ''}
           ${phaseBlock}
+          ${ptBlock}
           <div class="qi-actions">
             ${isWaiting || isAttending ? `
               <a href="${buildWaLink(item.phone, item.name)}"
@@ -2061,7 +2059,6 @@ function renderQueue() {
               <button class="btn btn-icon" onclick="setStatus('${id}', 'waiting')" style="font-size:11px">↩ Reabrir</button>
             ` : ''}
           </div>
-          ${ptBlock}
         </div>
       </div>
     `;
