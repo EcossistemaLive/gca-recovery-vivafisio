@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <meta name="theme-color" content="#1E293B">
-  <title>Recovery — Goiânia Crew Attack × Viva Fisio</title>
+  <title>Recovery — Session Overall × Viva Fisio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -835,6 +835,36 @@
       box-shadow: 0 0 0 3px rgba(139,92,246,.12);
     }
 
+    /* Custom select (queixa dropdown) */
+    .select-wrap { position: relative; }
+    .select-wrap select {
+      width: 100%;
+      padding: 12px 44px 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 16px;
+      font-family: inherit;
+      color: var(--dark);
+      background: var(--white);
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .select-wrap select:focus {
+      outline: none;
+      border-color: var(--purple-lt);
+      box-shadow: 0 0 0 3px rgba(139,92,246,.12);
+    }
+    .select-arrow {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--mid);
+    }
+
     /* ============================================================
        PHASE TIMER — admin attending card
     ============================================================ */
@@ -1101,7 +1131,7 @@
   <!-- Hero -->
   <section class="hero">
     <p class="hero-eyebrow">Recovery Esportivo Gratuito</p>
-    <h1 class="hero-title">Goiânia<br>Crew Attack</h1>
+    <h1 class="hero-title">Session<br>Overall</h1>
     <p class="hero-sub">Garanta seu horário de Recovery com os fisioterapeutas da Viva Fisio</p>
     <div class="hero-badge">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1134,6 +1164,26 @@
         <div class="field">
           <label for="f-instagram">Instagram *</label>
           <input type="text" id="f-instagram" name="instagram" placeholder="@seuperfil" autocomplete="off" inputmode="text" required>
+        </div>
+
+        <div class="field">
+          <label for="f-queixa">Queixa principal *</label>
+          <div class="select-wrap">
+            <select id="f-queixa" name="queixa">
+              <option value="" disabled selected>Selecione sua queixa…</option>
+              <option value="Tornozelo">🦶 Tornozelo</option>
+              <option value="Joelho">🦵 Joelho</option>
+              <option value="Quadril">🍑 Quadril</option>
+              <option value="Coluna lombar">🔩 Coluna lombar</option>
+              <option value="Punho e mão">✋ Punho e mão</option>
+              <option value="Outro">✏️ Outro</option>
+            </select>
+            <svg class="select-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="queixa-outro-wrap" id="queixa-outro-wrap">
+            <input type="text" id="f-queixa-outro" placeholder="Descreva sua queixa…" maxlength="120">
+          </div>
+          <div class="field-error" id="queixa-error" style="display:none">Selecione sua queixa principal.</div>
         </div>
 
         <!-- Faixa Instagram + Checkbox -->
@@ -1220,97 +1270,7 @@
     </div>
   </div>
 
-<<<<<<< Updated upstream
-=======
-  <!-- Banner Instagram -->
-  <div class="form-wrap" style="padding-bottom:0;">
-    <a href="https://www.instagram.com/vivafisiogoiania/" target="_blank" rel="noopener"
-       style="display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#5C2D91,#F47920);border-radius:12px;padding:14px 18px;text-decoration:none;color:#fff;font-weight:700;font-size:14px;box-shadow:0 4px 14px rgba(92,45,145,.3);margin-bottom:12px;">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">
-        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-      </svg>
-      <span>Siga-nos no Instagram e ganhe uma sessão de recovery grátis! 🎁</span>
-    </a>
-  </div>
 
-  <!-- Registration Form -->
-  <div id="section-form" class="form-wrap">
-    <div class="form-card">
-      <div class="form-header">
-        <h2 class="form-title">Garanta sua vaga 🎯</h2>
-        <p class="form-desc">Preencha seus dados para entrar na fila de atendimento. Você receberá uma notificação pelo WhatsApp quando estiver próximo da sua vez.</p>
-      </div>
-
-      <form id="reg-form" novalidate>
-        <div class="field">
-          <label for="f-name">Nome completo *</label>
-          <input type="text" id="f-name" name="name" placeholder="Seu nome" autocomplete="name" inputmode="text" required>
-        </div>
-
-        <div class="field">
-          <label for="f-phone">WhatsApp *</label>
-          <input type="tel" id="f-phone" name="phone" placeholder="(62) 9 0000-0000" autocomplete="tel" inputmode="tel" required>
-          <div class="field-hint">Com DDD. Ex: 62 9 8765-4321</div>
-        </div>
-
-        <div class="field">
-          <label for="f-instagram">Instagram *</label>
-          <input type="text" id="f-instagram" name="instagram" placeholder="@seuperfil" autocomplete="off" inputmode="text" required>
-        </div>
-
-        <div class="field">
-          <label>Queixa principal *</label>
-          <div class="queixa-grid" id="queixa-grid">
-            <button type="button" class="queixa-btn" data-queixa="Tornozelo">🦶 Tornozelo</button>
-            <button type="button" class="queixa-btn" data-queixa="Joelho">🦵 Joelho</button>
-            <button type="button" class="queixa-btn" data-queixa="Quadril">🍑 Quadril</button>
-            <button type="button" class="queixa-btn" data-queixa="Coluna lombar">🔩 Col. Lombar</button>
-            <button type="button" class="queixa-btn" data-queixa="Punho e mão">✋ Punho/Mão</button>
-            <button type="button" class="queixa-btn" data-queixa="Outro">✏️ Outro</button>
-          </div>
-          <div class="queixa-outro-wrap" id="queixa-outro-wrap">
-            <input type="text" id="f-queixa-outro" placeholder="Descreva sua queixa…" maxlength="120">
-          </div>
-          <div class="field-error" id="queixa-error" style="display:none">Selecione sua queixa principal.</div>
-        </div>
-
-        <div id="form-error" style="display:none" class="error-banner"></div>
-
-        <button type="submit" class="btn btn-primary" id="submit-btn">
-          Entrar na fila de Recovery
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Success state (hidden by default) -->
-  <div id="section-success" class="success-wrap" style="display:none">
-    <div class="success-card">
-      <div class="success-icon">🎉</div>
-      <h2 class="success-title">Você está na fila!</h2>
-      <p class="success-sub">Fique por perto — você receberá um WhatsApp quando estiver próximo da sua vez</p>
-
-      <div class="queue-box">
-        <div class="q-position" id="s-position">—</div>
-        <div class="q-pos-label">Sua posição na fila</div>
-        <div class="q-time" id="s-time">—</div>
-        <div class="q-time-label">Horário previsto</div>
-      </div>
-
-      <div class="loc-box">
-        <div class="loc-icon">📍</div>
-        <div>
-          <div class="loc-label">Local de atendimento</div>
-          <div class="loc-value">Tenda da Viva Fisio</div>
-        </div>
-      </div>
-
-      <div class="register-again">
-        Errou algum dado? <button id="btn-reregister" type="button">Cadastrar novamente</button>
-      </div>
-    </div>
-  </div>
->>>>>>> Stashed changes
 
   <!-- Footer -->
   <div class="ig-footer">
@@ -1321,7 +1281,7 @@
       Siga a Viva Fisio no Instagram
     </a>
     <div style="margin-top:16px;">
-      <img src="gca-footer.png" alt="Goiânia Crew Attack 2026"
+      <img src="gca-footer.png" alt="Session Overall 2026"
            style="max-width:260px;width:80%;opacity:.85;display:block;margin:0 auto;">
     </div>
     <p style="margin-top:24px;font-size:11px;color:#94A3B8;opacity:.7;letter-spacing:.3px;">
@@ -1345,7 +1305,7 @@
       </div>
       <div>
         <div class="adm-title">Painel da Fila</div>
-        <div style="font-size:11px;color:#94A3B8;">Goiânia Crew Attack</div>
+        <div style="font-size:11px;color:#94A3B8;">Session Overall</div>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:10px;">
@@ -1648,13 +1608,13 @@ document.getElementById('reg-form').addEventListener('submit', async function(e)
   // Queixa principal
   const queixaErr = document.getElementById('queixa-error');
   queixaErr.style.display = 'none';
-  const selectedQueixa = document.querySelector('.queixa-btn.selected');
-  if (!selectedQueixa) {
+  const queixaSel = document.getElementById('f-queixa');
+  if (!queixaSel || !queixaSel.value) {
     queixaErr.textContent = 'Selecione sua queixa principal.';
     queixaErr.style.display = 'block';
     return;
   }
-  let queixa = selectedQueixa.dataset.queixa;
+  let queixa = queixaSel.value;
   if (queixa === 'Outro') {
     const outrText = document.getElementById('f-queixa-outro').value.trim();
     if (!outrText) {
@@ -1721,29 +1681,30 @@ document.getElementById('btn-reregister').addEventListener('click', function() {
   document.getElementById('section-form').style.display    = 'block';
   document.getElementById('section-success').style.display = 'none';
   document.getElementById('reg-form').reset();
-  // Reset queixa selector
-  document.querySelectorAll('.queixa-btn').forEach(b => b.classList.remove('selected'));
+  // Reset queixa select
+  const qSel = document.getElementById('f-queixa');
+  if (qSel) qSel.value = '';
   document.getElementById('queixa-outro-wrap').classList.remove('open');
   document.getElementById('queixa-error').style.display = 'none';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 /* ═══════════════════════════════════════════════════════════
-   QUEIXA SELECTOR — interação
+   QUEIXA SELECT — interação
 ═══════════════════════════════════════════════════════════ */
-document.querySelectorAll('.queixa-btn').forEach(btn => {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.queixa-btn').forEach(b => b.classList.remove('selected'));
-    this.classList.add('selected');
+(function() {
+  const sel = document.getElementById('f-queixa');
+  if (!sel) return;
+  sel.addEventListener('change', function() {
     const wrap = document.getElementById('queixa-outro-wrap');
-    if (this.dataset.queixa === 'Outro') {
+    if (this.value === 'Outro') {
       wrap.classList.add('open');
       setTimeout(() => document.getElementById('f-queixa-outro').focus(), 50);
     } else {
       wrap.classList.remove('open');
     }
   });
-});
+})();
 
 /* ═══════════════════════════════════════════════════════════
    ADMIN — LISTENER EM TEMPO REAL
