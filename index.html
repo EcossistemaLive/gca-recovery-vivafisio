@@ -12,19 +12,19 @@
        TOKENS & RESET
     ============================================================ */
     :root {
-      --purple:   #5C2D91;
-      --purple-lt:#8B5CF6;
-      --orange:   #F47920;
-      --orange-lt:#F5A623;
+      --purple:   #3A6B24;
+      --purple-lt:#669D4A;
+      --orange:   #EA9A3B;
+      --orange-lt:#F5B056;
       --green:    #2D7A4F;
       --green-lt: #16A34A;
-      --cream:    #EDD9A3;
-      --grad:     linear-gradient(135deg, #5C2D91 0%, #F47920 100%);
-      --grad-r:   linear-gradient(135deg, #F47920 0%, #5C2D91 100%);
-      --dark:     #1A0A30;
+      --cream:    #FDF9F1;
+      --grad:     linear-gradient(135deg, #3A6B24 0%, #EA9A3B 100%);
+      --grad-r:   linear-gradient(135deg, #EA9A3B 0%, #3A6B24 100%);
+      --dark:     #16110E;
       --mid:      #64748B;
       --border:   #E2E8F0;
-      --surface:  #F5F0FF;
+      --surface:  #F4F7F2;
       --white:    #FFFFFF;
       --radius:   12px;
       --shadow:   0 1px 2px rgba(0,0,0,.06), 0 4px 10px rgba(0,0,0,.07);
@@ -216,13 +216,9 @@
     .hero::after {
       content: '';
       position: absolute;
-      right: -20px;
-      bottom: -10px;
-      width: 62%;
-      max-width: 300px;
-      height: 95%;
-      background: url('gca-bird.png') no-repeat right bottom / contain;
-      opacity: 0.22;
+      inset: 0;
+      background: url('overall.png') no-repeat center / cover;
+      opacity: 0.25;
       pointer-events: none;
       z-index: 0;
     }
