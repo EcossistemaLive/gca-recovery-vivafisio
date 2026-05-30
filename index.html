@@ -1819,6 +1819,24 @@ async function setPhase(id, phase) {
   }
 }
 
+async function startAttendance(id, phase, pt) {
+  if (!pt) {
+    alert('⚠️ OBRIGATÓRIO: Selecione se o paciente é "Atleta" ou "Cliente Pago" antes de iniciar o atendimento!');
+    return;
+  }
+  try {
+    await db.ref('registrations/' + id).update({
+      status: 'attending',
+      attendingStartedAt: firebase.database.ServerValue.TIMESTAMP,
+      phase: phase,
+      phaseStartedAt: firebase.database.ServerValue.TIMESTAMP
+    });
+    showToast('▶ Atendimento iniciado na ' + (phase === 'bota' ? 'Bota' : 'Maca'));
+  } catch (err) {
+    showToast('⚠️ Sem conexão — tente novamente');
+  }
+}
+
 async function setPatientType(id, type) {
   try {
     await db.ref('registrations/' + id).update({ patientType: type || null });
@@ -1971,8 +1989,8 @@ function renderQueue() {
     // Toggle de tipo de paciente
     const pt = item.patientType || '';
     const ptBlock = `
-      <div class="ptype-wrap">
-        <span class="ptype-label">👤 Tipo</span>
+      <div class="ptype-wrap" style="${!pt && isWaiting ? 'border:1.5px dashed var(--red);padding:6px;border-radius:10px;background:#FEF2F2' : ''}">
+        <span class="ptype-label" style="${!pt && isWaiting ? 'color:var(--red)' : ''}">${!pt && isWaiting ? '⚠️ Selecione o Tipo:' : '👤 Tipo'}</span>
         <button class="ptype-btn ${pt === 'atleta' ? 'active-atleta' : ''}"
           onclick="setPatientType('${id}', '${pt === 'atleta' ? '' : 'atleta'}')">
           🏃 Atleta
@@ -2031,9 +2049,9 @@ function renderQueue() {
               <button class="btn btn-maca" onclick="setPhase('${id}', 'maca')">🛏️ Maca</button>
             ` : ''}
             ${isWaiting ? `
-              <button class="btn btn-mark" onclick="setStatus('${id}', 'attending')">
-                ▶ Em atendimento
-              </button>
+              <div style="font-size:11px;font-weight:700;color:var(--mid);margin:4px 0 2px;text-transform:uppercase;letter-spacing:.5px;width:100%">▶ Iniciar Atendimento em:</div>
+              <button class="btn btn-bota" style="flex:1" onclick="startAttendance('${id}', 'bota', '${pt}')">🥾 Bota</button>
+              <button class="btn btn-maca" style="flex:1" onclick="startAttendance('${id}', 'maca', '${pt}')">🛏️ Maca</button>
             ` : ''}
             ${isAttending ? `
               <button class="btn btn-done" onclick="setStatus('${id}', 'done')">✅ Concluído</button>
