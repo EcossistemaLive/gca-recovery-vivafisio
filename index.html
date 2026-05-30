@@ -742,8 +742,6 @@
       .qi-actions { gap: 6px; }
       .btn { font-size: 12px; padding: 8px 13px; }
     }
-
-<<<<<<< Updated upstream
     /* Mobile — hero mais compacto para o formulário aparecer sem scroll */
     @media (max-width: 600px) {
       .hero { padding: 20px 20px 32px; }
@@ -781,11 +779,10 @@
       border: 2px solid transparent;
       transition: border-color .3s;
     }
-    .timer-card.tc-running { border-color: var(--emerald); }
     .timer-card.tc-expired { border-color: var(--red); }
 
-    .timer-label {
-=======
+    .timer-label { margin-bottom: 8px; }
+
     /* ============================================================
        QUEIXA SELECTOR
     ============================================================ */
@@ -958,14 +955,12 @@
       margin-bottom: 16px;
     }
     .qb-title {
->>>>>>> Stashed changes
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .8px;
       color: var(--mid);
-<<<<<<< Updated upstream
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
     .timer-display {
@@ -1054,8 +1049,6 @@
       font-size: 11px;
       font-weight: 700;
       color: var(--red);
-=======
-      margin-bottom: 12px;
     }
     .qb-row {
       display: flex;
@@ -1095,7 +1088,6 @@
       width: 22px;
       text-align: right;
       flex-shrink: 0;
->>>>>>> Stashed changes
     }
   </style>
 </head>
@@ -2018,7 +2010,6 @@ function renderQueue() {
               : ''}
             ${qPill}
           </div>
-<<<<<<< Updated upstream
           ${isAttending ? `
             <div class="ptimer-wrap" id="ptimer-wrap-${id}">
               <span class="ptimer" id="ptimer-${id}">00:00</span>
@@ -2026,9 +2017,7 @@ function renderQueue() {
               <span class="ptimer-badge" id="ptimer-badge-${id}"></span>
             </div>
           ` : ''}
-=======
           ${phaseBlock}
->>>>>>> Stashed changes
           <div class="qi-actions">
             ${isWaiting || isAttending ? `
               <a href="${buildWaLink(item.phone, item.name)}"
@@ -2061,12 +2050,9 @@ function renderQueue() {
   }).join('');
 
   list.innerHTML = html;
-<<<<<<< Updated upstream
   // Inicia/mantém o loop de atualização dos cronômetros individuais
   startPatientTimerPolling();
-=======
   startTimerInterval();
->>>>>>> Stashed changes
 }
 
 function updateSpotlights(current, next) {
