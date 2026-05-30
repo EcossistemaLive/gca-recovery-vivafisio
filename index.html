@@ -505,7 +505,7 @@
        ===  ADMIN VIEW  ===
     ============================================================ */
     .adm-header {
-      background: #1A0A30;
+      background: var(--dark);
       border-bottom: 2px solid var(--orange);
       color: #fff;
       padding: 14px 20px;
@@ -515,6 +515,16 @@
       position: sticky;
       top: 0;
       z-index: 50;
+      overflow: hidden;
+    }
+    .adm-header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('overall.png') no-repeat center / cover;
+      opacity: 0.20;
+      pointer-events: none;
+      z-index: -1;
     }
     .adm-header-left  { display: flex; align-items: center; gap: 12px; }
     .adm-header-logo  { height: 32px; }
