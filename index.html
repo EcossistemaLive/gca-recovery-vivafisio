@@ -812,12 +812,10 @@
     .queixa-btn:hover  { border-color: var(--purple-lt); color: var(--purple); }
     .queixa-btn.selected { border-color: var(--purple); background: #F5F0FF; color: var(--purple); }
     .queixa-outro-wrap {
-      margin-top: 0;
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height .35s ease, margin-top .35s ease;
+      display: none;
+      margin-top: 8px;
     }
-    .queixa-outro-wrap.open { max-height: 80px; margin-top: 8px; }
+    .queixa-outro-wrap.open { display: block; }
     .queixa-outro-wrap input {
       width: 100%;
       padding: 11px 14px;
@@ -2170,8 +2168,7 @@ function exportCSV() {
   const logo = document.getElementById('logo-tap');
   if (!logo) return;
 
-  logo.addEventListener('pointerdown', function(e) {
-    if (e.button !== 0 && e.pointerType === 'mouse') return;
+  logo.addEventListener('click', function(e) {
     count++;
     renderDots(count);
     clearTimeout(timer);
