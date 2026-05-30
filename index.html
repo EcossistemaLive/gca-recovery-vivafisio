@@ -2231,108 +2231,6 @@ async function resetQueue() {
 /* ═══════════════════════════════════════════════════════════
    ADMIN — CRONÔMETRO DE ATENDIMENTO
    ═══════════════════════════════════════════════════════════ */
-const timerState = {
-  interval: null,
-  remaining: 15 * 60,  // segundos (padrão: 15 min)
-  running: false
-};
-
-function timerUpdateDisplay() {
-  const m = Math.floor(timerState.remaining / 60);
-  const s = timerState.remaining % 60;
-  const txt = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
-  const el  = document.getElementById('timer-display');
-  const card = document.getElementById('timer-card');
-  if (!el) return;
-  el.textContent = txt;
-  el.className   = 'timer-display';
-  card.className = 'timer-card';
-  if (timerState.running) {
-    if (timerState.remaining <= 30)  { el.classList.add('td-expired');  card.classList.add('tc-expired'); }
-    else if (timerState.remaining <= 60) { el.classList.add('td-warning'); }
-    else { el.classList.add('td-running'); card.classList.add('tc-running'); }
-  }
-}
-
-function timerStart() {
-  if (timerState.running) return;
-  if (timerState.remaining <= 0) {
-    const mins = parseInt(document.getElementById('timer-min').value, 10) || 7;
-    timerState.remaining = Math.max(1, mins) * 60;
-  }
-  timerState.running = true;
-  document.getElementById('btn-timer-start').style.display = 'none';
-  document.getElementById('btn-timer-pause').style.display = '';
-  timerUpdateDisplay();
-  timerState.interval = setInterval(() => {
-    timerState.remaining--;
-    timerUpdateDisplay();
-    if (timerState.remaining <= 0) timerExpired();
-  }, 1000);
-}
-
-function timerPause() {
-  clearInterval(timerState.interval);
-  timerState.running = false;
-  document.getElementById('btn-timer-start').style.display = '';
-  document.getElementById('btn-timer-pause').style.display = 'none';
-  document.getElementById('timer-card').className = 'timer-card';
-  document.getElementById('timer-display').className = 'timer-display';
-}
-
-function timerReset() {
-  clearInterval(timerState.interval);
-  timerState.running = false;
-  const mins = parseInt(document.getElementById('timer-min').value, 10) || 7;
-  timerState.remaining = Math.max(1, mins) * 60;
-  timerUpdateDisplay();
-  document.getElementById('btn-timer-start').style.display = '';
-  document.getElementById('btn-timer-pause').style.display = 'none';
-  document.getElementById('timer-card').className = 'timer-card';
-  document.getElementById('timer-display').className = 'timer-display';
-}
-
-function timerExpired() {
-  clearInterval(timerState.interval);
-  timerState.running = false;
-  timerState.remaining = 0;
-  document.getElementById('btn-timer-start').style.display = '';
-  document.getElementById('btn-timer-pause').style.display = 'none';
-  document.getElementById('timer-card').className = 'timer-card tc-expired';
-  document.getElementById('timer-display').className = 'timer-display td-expired';
-  document.getElementById('timer-display').textContent = '00:00';
-
-  // Alerta sonoro — 4 bipes
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    [0, 0.32, 0.64, 0.96].forEach(delay => {
-      const osc  = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.frequency.value = 880;
-      osc.type = 'sine';
-      gain.gain.setValueAtTime(0.45, ctx.currentTime + delay);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.28);
-      osc.start(ctx.currentTime + delay);
-      osc.stop(ctx.currentTime + delay + 0.28);
-    });
-  } catch (e) {}
-
-  // Notificação do navegador
-  if (state.notifEnabled) {
-    try {
-      new Notification('⏰ Tempo esgotado!', { body: 'Hora de rotacionar os atletas!' });
-    } catch (e) {}
-  }
-
-  showToast('⏰ Tempo esgotado! Hora de trocar os atletas!', 4000);
-}
-
-// Atualiza display quando duração é alterada (fora do modo running)
-document.getElementById('timer-min').addEventListener('input', function() {
-  if (!timerState.running) timerReset();
-});
 
 /* ═══════════════════════════════════════════════════════════
    CRONÔMETROS INDIVIDUAIS POR PACIENTE
@@ -2346,11 +2244,15 @@ function startPatientTimerPolling() {
 }
 
 function updatePatientTimers() {
-  const now          = Date.now();
-  const durationSecs = Math.max(1, parseInt(document.getElementById('timer-min')?.value || 7, 10)) * 60;
+  const now = Date.now();
 
   state.queue.forEach(item => {
     if (item.status !== 'attending' || !item.attendingStartedAt) return;
+
+    const phase = item.phase || 'bota';
+    const durationMins = parseInt(document.getElementById('a-tempo-' + phase)?.value || 10, 10);
+    const durationSecs = Math.max(1, durationMins) * 60;
+
 
     const elapsedSecs = Math.floor((now - item.attendingStartedAt) / 1000);
     const m   = Math.floor(elapsedSecs / 60);
