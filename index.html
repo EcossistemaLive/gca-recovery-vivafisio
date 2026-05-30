@@ -743,6 +743,7 @@
       .btn { font-size: 12px; padding: 8px 13px; }
     }
 
+<<<<<<< Updated upstream
     /* Mobile — hero mais compacto para o formulário aparecer sem scroll */
     @media (max-width: 600px) {
       .hero { padding: 20px 20px 32px; }
@@ -784,11 +785,158 @@
     .timer-card.tc-expired { border-color: var(--red); }
 
     .timer-label {
+=======
+    /* ============================================================
+       QUEIXA SELECTOR
+    ============================================================ */
+    .queixa-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .queixa-btn {
+      padding: 10px 8px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: inherit;
+      color: var(--mid);
+      background: var(--white);
+      cursor: pointer;
+      text-align: center;
+      transition: all .2s;
+      line-height: 1.4;
+    }
+    .queixa-btn:hover  { border-color: var(--purple-lt); color: var(--purple); }
+    .queixa-btn.selected { border-color: var(--purple); background: #F5F0FF; color: var(--purple); }
+    .queixa-outro-wrap {
+      margin-top: 8px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s ease;
+    }
+    .queixa-outro-wrap.open { max-height: 80px; }
+    .queixa-outro-wrap input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--dark);
+      background: var(--white);
+      -webkit-appearance: none;
+    }
+    .queixa-outro-wrap input:focus {
+      outline: none;
+      border-color: var(--purple-lt);
+      box-shadow: 0 0 0 3px rgba(139,92,246,.12);
+    }
+
+    /* ============================================================
+       PHASE TIMER — admin attending card
+    ============================================================ */
+    .phase-timer-wrap {
+      background: #1A0A30;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .phase-timer-phase {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,.55);
+      flex-shrink: 0;
+    }
+    .phase-timer-phase span {
+      display: block;
+      font-size: 15px;
+      letter-spacing: 0;
+      color: #fff;
+      text-transform: none;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    .phase-timer-elapsed {
+      font-family: 'Bangers', cursive;
+      font-size: 42px;
+      letter-spacing: 3px;
+      color: #fff;
+      line-height: 1;
+      flex: 1;
+      text-align: right;
+    }
+    .phase-timer-elapsed.overtime { color: var(--orange); }
+    .phase-timer-elapsed.warning  { color: #FBBF24; }
+    .phase-no-timer {
+      background: #F5F0FF;
+      border: 1.5px dashed #C4B5FD;
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin: 10px 0;
+      font-size: 13px;
+      color: var(--purple);
+      font-weight: 600;
+      text-align: center;
+    }
+    .btn-bota { background: #7C3AED; color: #fff; }
+    .btn-bota:hover:not(:disabled) { background: #6D28D9; }
+    .btn-maca { background: #0891B2; color: #fff; }
+    .btn-maca:hover:not(:disabled) { background: #0E7490; }
+
+    /* ============================================================
+       PATIENT TYPE TOGGLE — admin card
+    ============================================================ */
+    .ptype-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .ptype-label { font-size: 11px; font-weight: 700; color: var(--mid); text-transform: uppercase; letter-spacing: .5px; }
+    .ptype-btn {
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      border: 1.5px solid var(--border);
+      background: none;
+      color: var(--mid);
+      transition: all .2s;
+    }
+    .ptype-btn.active-atleta  { background: #EFF6FF; border-color: #3B82F6; color: #1D4ED8; }
+    .ptype-btn.active-cliente { background: #FFF7ED; border-color: var(--orange); color: #C2410C; }
+
+    /* ============================================================
+       QUEIXA BREAKDOWN — admin stats
+    ============================================================ */
+    .queixa-breakdown {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+    .qb-title {
+>>>>>>> Stashed changes
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .8px;
       color: var(--mid);
+<<<<<<< Updated upstream
       margin-bottom: 8px;
     }
 
@@ -878,6 +1026,48 @@
       font-size: 11px;
       font-weight: 700;
       color: var(--red);
+=======
+      margin-bottom: 12px;
+    }
+    .qb-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .qb-row:last-child { margin-bottom: 0; }
+    .qb-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--dark);
+      width: 120px;
+      flex-shrink: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .qb-bar-wrap {
+      flex: 1;
+      background: var(--surface);
+      border-radius: 100px;
+      height: 6px;
+      overflow: hidden;
+    }
+    .qb-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: var(--grad);
+      transition: width .4s ease;
+      min-width: 3px;
+    }
+    .qb-count {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--purple);
+      width: 22px;
+      text-align: right;
+      flex-shrink: 0;
+>>>>>>> Stashed changes
     }
   </style>
 </head>
@@ -1030,6 +1220,97 @@
     </div>
   </div>
 
+<<<<<<< Updated upstream
+=======
+  <!-- Banner Instagram -->
+  <div class="form-wrap" style="padding-bottom:0;">
+    <a href="https://www.instagram.com/vivafisiogoiania/" target="_blank" rel="noopener"
+       style="display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#5C2D91,#F47920);border-radius:12px;padding:14px 18px;text-decoration:none;color:#fff;font-weight:700;font-size:14px;box-shadow:0 4px 14px rgba(92,45,145,.3);margin-bottom:12px;">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+      </svg>
+      <span>Siga-nos no Instagram e ganhe uma sessão de recovery grátis! 🎁</span>
+    </a>
+  </div>
+
+  <!-- Registration Form -->
+  <div id="section-form" class="form-wrap">
+    <div class="form-card">
+      <div class="form-header">
+        <h2 class="form-title">Garanta sua vaga 🎯</h2>
+        <p class="form-desc">Preencha seus dados para entrar na fila de atendimento. Você receberá uma notificação pelo WhatsApp quando estiver próximo da sua vez.</p>
+      </div>
+
+      <form id="reg-form" novalidate>
+        <div class="field">
+          <label for="f-name">Nome completo *</label>
+          <input type="text" id="f-name" name="name" placeholder="Seu nome" autocomplete="name" inputmode="text" required>
+        </div>
+
+        <div class="field">
+          <label for="f-phone">WhatsApp *</label>
+          <input type="tel" id="f-phone" name="phone" placeholder="(62) 9 0000-0000" autocomplete="tel" inputmode="tel" required>
+          <div class="field-hint">Com DDD. Ex: 62 9 8765-4321</div>
+        </div>
+
+        <div class="field">
+          <label for="f-instagram">Instagram *</label>
+          <input type="text" id="f-instagram" name="instagram" placeholder="@seuperfil" autocomplete="off" inputmode="text" required>
+        </div>
+
+        <div class="field">
+          <label>Queixa principal *</label>
+          <div class="queixa-grid" id="queixa-grid">
+            <button type="button" class="queixa-btn" data-queixa="Tornozelo">🦶 Tornozelo</button>
+            <button type="button" class="queixa-btn" data-queixa="Joelho">🦵 Joelho</button>
+            <button type="button" class="queixa-btn" data-queixa="Quadril">🍑 Quadril</button>
+            <button type="button" class="queixa-btn" data-queixa="Coluna lombar">🔩 Col. Lombar</button>
+            <button type="button" class="queixa-btn" data-queixa="Punho e mão">✋ Punho/Mão</button>
+            <button type="button" class="queixa-btn" data-queixa="Outro">✏️ Outro</button>
+          </div>
+          <div class="queixa-outro-wrap" id="queixa-outro-wrap">
+            <input type="text" id="f-queixa-outro" placeholder="Descreva sua queixa…" maxlength="120">
+          </div>
+          <div class="field-error" id="queixa-error" style="display:none">Selecione sua queixa principal.</div>
+        </div>
+
+        <div id="form-error" style="display:none" class="error-banner"></div>
+
+        <button type="submit" class="btn btn-primary" id="submit-btn">
+          Entrar na fila de Recovery
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Success state (hidden by default) -->
+  <div id="section-success" class="success-wrap" style="display:none">
+    <div class="success-card">
+      <div class="success-icon">🎉</div>
+      <h2 class="success-title">Você está na fila!</h2>
+      <p class="success-sub">Fique por perto — você receberá um WhatsApp quando estiver próximo da sua vez</p>
+
+      <div class="queue-box">
+        <div class="q-position" id="s-position">—</div>
+        <div class="q-pos-label">Sua posição na fila</div>
+        <div class="q-time" id="s-time">—</div>
+        <div class="q-time-label">Horário previsto</div>
+      </div>
+
+      <div class="loc-box">
+        <div class="loc-icon">📍</div>
+        <div>
+          <div class="loc-label">Local de atendimento</div>
+          <div class="loc-value">Tenda da Viva Fisio</div>
+        </div>
+      </div>
+
+      <div class="register-again">
+        Errou algum dado? <button id="btn-reregister" type="button">Cadastrar novamente</button>
+      </div>
+    </div>
+  </div>
+>>>>>>> Stashed changes
 
   <!-- Footer -->
   <div class="ig-footer">
@@ -1079,10 +1360,14 @@
 
     <!-- Config bar -->
     <div class="config-bar">
-      <label>Início do evento</label>
+      <label>Início</label>
       <input type="time" id="a-start-time" value="09:00">
       <label title="Quantas pessoas são atendidas ao mesmo tempo">Macas</label>
       <input type="number" id="a-slots" min="1" max="20" step="1" value="2">
+      <label title="Tempo na Bota (min)">🥾 min</label>
+      <input type="number" id="a-tempo-bota" min="1" max="60" step="1" value="10">
+      <label title="Tempo na Maca (min)">🛏️ min</label>
+      <input type="number" id="a-tempo-maca" min="1" max="60" step="1" value="10">
       <button class="config-save" id="btn-save-config">Salvar</button>
       <button class="notif-btn" id="btn-notif" title="Ativar notificações do navegador">🔔 Alertas</button>
     </div>
@@ -1116,6 +1401,12 @@
         <div class="stat-num num-done" id="a-count-done">0</div>
         <div class="stat-label">Concluídos</div>
       </div>
+    </div>
+
+    <!-- Queixa Breakdown -->
+    <div class="queixa-breakdown">
+      <div class="qb-title">🩺 Queixas da fila</div>
+      <div id="queixa-breakdown-list"></div>
     </div>
 
     <!-- Current & Next -->
@@ -1204,10 +1495,13 @@ const state = {
   isAdmin:           false,
   startTime:         localStorage.getItem('gca_start') || '09:00',
   slots:             parseInt(localStorage.getItem('gca_slots'), 10) || 2,
+  tempoBota:         parseInt(localStorage.getItem('gca_tempo_bota'), 10) || 10,
+  tempoMaca:         parseInt(localStorage.getItem('gca_tempo_maca'), 10) || 10,
   queue:             [],
   notifEnabled:      false,
   _listenerAttached: false,
-  _configAttached:   false
+  _configAttached:   false,
+  _timerInterval:    null
 };
 
 /* ═══════════════════════════════════════════════════════════
@@ -1230,6 +1524,18 @@ function startConfigListener() {
       localStorage.setItem('gca_slots', String(state.slots));
       const inp = document.getElementById('a-slots');
       if (inp && document.activeElement !== inp) inp.value = state.slots;
+    }
+    if (cfg.tempoBota && Number(cfg.tempoBota) >= 1) {
+      state.tempoBota = Math.max(1, Math.floor(Number(cfg.tempoBota)));
+      localStorage.setItem('gca_tempo_bota', String(state.tempoBota));
+      const inp = document.getElementById('a-tempo-bota');
+      if (inp && document.activeElement !== inp) inp.value = state.tempoBota;
+    }
+    if (cfg.tempoMaca && Number(cfg.tempoMaca) >= 1) {
+      state.tempoMaca = Math.max(1, Math.floor(Number(cfg.tempoMaca)));
+      localStorage.setItem('gca_tempo_maca', String(state.tempoMaca));
+      const inp = document.getElementById('a-tempo-maca');
+      if (inp && document.activeElement !== inp) inp.value = state.tempoMaca;
     }
     // Re-renderiza a fila admin (se aberta) com os novos parâmetros
     if (state.isAdmin && state.queue.length) renderQueue();
@@ -1339,6 +1645,26 @@ document.getElementById('reg-form').addEventListener('submit', async function(e)
     return;
   }
 
+  // Queixa principal
+  const queixaErr = document.getElementById('queixa-error');
+  queixaErr.style.display = 'none';
+  const selectedQueixa = document.querySelector('.queixa-btn.selected');
+  if (!selectedQueixa) {
+    queixaErr.textContent = 'Selecione sua queixa principal.';
+    queixaErr.style.display = 'block';
+    return;
+  }
+  let queixa = selectedQueixa.dataset.queixa;
+  if (queixa === 'Outro') {
+    const outrText = document.getElementById('f-queixa-outro').value.trim();
+    if (!outrText) {
+      queixaErr.textContent = 'Por favor, descreva sua queixa.';
+      queixaErr.style.display = 'block';
+      return;
+    }
+    queixa = 'Outro: ' + outrText;
+  }
+
   submitBtn.disabled = true;
   submitBtn.innerHTML = '<span class="spinner"></span> Cadastrando…';
 
@@ -1351,12 +1677,13 @@ document.getElementById('reg-form').addEventListener('submit', async function(e)
       name,
       phone,
       instagram: ig,
+      queixa,
       status:    'waiting',
       createdAt: firebase.database.ServerValue.TIMESTAMP
     });
 
     // 2. Lê de volta para obter o timestamp real atribuído pelo servidor
-    const mySnap     = await newRef.once('value');
+    const mySnap      = await newRef.once('value');
     const myCreatedAt = mySnap.val().createdAt;
 
     // 3. Calcula posição com EXATAMENTE o mesmo algoritmo que o painel admin usa para _seq
@@ -1394,7 +1721,28 @@ document.getElementById('btn-reregister').addEventListener('click', function() {
   document.getElementById('section-form').style.display    = 'block';
   document.getElementById('section-success').style.display = 'none';
   document.getElementById('reg-form').reset();
+  // Reset queixa selector
+  document.querySelectorAll('.queixa-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('queixa-outro-wrap').classList.remove('open');
+  document.getElementById('queixa-error').style.display = 'none';
   window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* ═══════════════════════════════════════════════════════════
+   QUEIXA SELECTOR — interação
+═══════════════════════════════════════════════════════════ */
+document.querySelectorAll('.queixa-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.queixa-btn').forEach(b => b.classList.remove('selected'));
+    this.classList.add('selected');
+    const wrap = document.getElementById('queixa-outro-wrap');
+    if (this.dataset.queixa === 'Outro') {
+      wrap.classList.add('open');
+      setTimeout(() => document.getElementById('f-queixa-outro').focus(), 50);
+    } else {
+      wrap.classList.remove('open');
+    }
+  });
 });
 
 /* ═══════════════════════════════════════════════════════════
@@ -1449,18 +1797,24 @@ function loadQueue() {
 document.getElementById('btn-save-config').addEventListener('click', async function() {
   const startVal = document.getElementById('a-start-time').value;
   const slotsVal = Math.max(1, Math.floor(Number(document.getElementById('a-slots').value) || 1));
+  const botaVal  = Math.max(1, Math.floor(Number(document.getElementById('a-tempo-bota').value) || 10));
+  const macaVal  = Math.max(1, Math.floor(Number(document.getElementById('a-tempo-maca').value) || 10));
   if (!startVal) return;
 
   // Atualiza estado local imediatamente (UX)
   state.startTime = startVal;
   state.slots     = slotsVal;
-  localStorage.setItem('gca_start', startVal);
-  localStorage.setItem('gca_slots', String(slotsVal));
+  state.tempoBota = botaVal;
+  state.tempoMaca = macaVal;
+  localStorage.setItem('gca_start',      startVal);
+  localStorage.setItem('gca_slots',      String(slotsVal));
+  localStorage.setItem('gca_tempo_bota', String(botaVal));
+  localStorage.setItem('gca_tempo_maca', String(macaVal));
 
   // Sincroniza para TODOS os clientes (admin + público) via Firebase
   try {
-    await configRef.update({ startTime: startVal, slots: slotsVal });
-    showToast(`✅ Salvo — Início ${startVal} · ${slotsVal} maca${slotsVal > 1 ? 's' : ''}`);
+    await configRef.update({ startTime: startVal, slots: slotsVal, tempoBota: botaVal, tempoMaca: macaVal });
+    showToast(`✅ Salvo — Início ${startVal} · ${slotsVal} maca${slotsVal > 1 ? 's' : ''} · 🥾 ${botaVal}min · 🛏️ ${macaVal}min`);
   } catch (err) {
     showToast('⚠️ Salvou localmente, mas não sincronizou: ' + err.message);
   }
@@ -1507,6 +1861,96 @@ async function setStatus(id, status) {
 /* ═══════════════════════════════════════════════════════════
    ADMIN — RENDER QUEUE
    ═══════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   ADMIN — FASE DO ATENDIMENTO
+═══════════════════════════════════════════════════════════ */
+async function setPhase(id, phase) {
+  try {
+    await db.ref('registrations/' + id).update({
+      phase,
+      phaseStartedAt: firebase.database.ServerValue.TIMESTAMP
+    });
+    showToast(phase === 'bota' ? '🥾 Bota iniciada' : '🛏️ Maca iniciada');
+  } catch (err) {
+    showToast('⚠️ Sem conexão — tente novamente');
+  }
+}
+
+async function setPatientType(id, type) {
+  try {
+    await db.ref('registrations/' + id).update({ patientType: type || null });
+    if (type === 'atleta')       showToast('🏃 Marcado: Atleta');
+    else if (type === 'cliente_pago') showToast('💳 Marcado: Cliente Pago');
+    else showToast('Tipo removido');
+  } catch (err) {
+    showToast('⚠️ Sem conexão — tente novamente');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TIMER PROGRESSIVO
+═══════════════════════════════════════════════════════════ */
+function formatTimer(secs) {
+  const s = Math.abs(secs);
+  const m = Math.floor(s / 60).toString().padStart(2, '0');
+  const r = (s % 60).toString().padStart(2, '0');
+  return m + ':' + r;
+}
+
+function startTimerInterval() {
+  if (state._timerInterval) return;
+  state._timerInterval = setInterval(() => {
+    state.queue.forEach(item => {
+      if (item.status !== 'attending' || !item.phase || !item.phaseStartedAt) return;
+      const el = document.getElementById('timer-' + item.id);
+      if (!el) return;
+      const elapsed  = Math.floor((Date.now() - item.phaseStartedAt) / 1000);
+      const limitSec = (item.phase === 'bota' ? state.tempoBota : state.tempoMaca) * 60;
+      if (elapsed >= limitSec) {
+        el.textContent = '+' + formatTimer(elapsed - limitSec);
+        el.className = 'phase-timer-elapsed overtime';
+      } else {
+        el.textContent = formatTimer(elapsed);
+        el.className = 'phase-timer-elapsed' + (elapsed / limitSec >= 0.8 ? ' warning' : '');
+      }
+    });
+  }, 1000);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   QUEIXA BREAKDOWN
+═══════════════════════════════════════════════════════════ */
+const QUEIXA_OPTIONS = [
+  { key: 'Tornozelo',    emoji: '🦶' },
+  { key: 'Joelho',       emoji: '🦵' },
+  { key: 'Quadril',      emoji: '🍑' },
+  { key: 'Coluna lombar',emoji: '🔩' },
+  { key: 'Punho e mão',  emoji: '✋' },
+  { key: 'Outro',        emoji: '✏️' }
+];
+
+function updateQueixaBreakdown(queue) {
+  const container = document.getElementById('queixa-breakdown-list');
+  if (!container) return;
+  const counts = {};
+  QUEIXA_OPTIONS.forEach(q => { counts[q.key] = 0; });
+  queue.forEach(item => {
+    if (!item.queixa) return;
+    const key = item.queixa.startsWith('Outro') ? 'Outro' : item.queixa;
+    if (counts[key] !== undefined) counts[key]++;
+    else counts['Outro']++;
+  });
+  const max   = Math.max(1, ...Object.values(counts));
+  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+  container.innerHTML = QUEIXA_OPTIONS.map(q => `
+    <div class="qb-row">
+      <div class="qb-label">${q.emoji} ${q.key}</div>
+      <div class="qb-bar-wrap"><div class="qb-bar-fill" style="width:${(counts[q.key]/max*100).toFixed(0)}%"></div></div>
+      <div class="qb-count">${counts[q.key]}</div>
+    </div>
+  `).join('') + (total === 0 ? '<div style="text-align:center;color:var(--mid);font-size:12px;padding:6px 0">Nenhum cadastro ainda</div>' : '');
+}
+
 const notifiedSet = new Set();
 
 function renderQueue() {
@@ -1518,6 +1962,7 @@ function renderQueue() {
     list.innerHTML = '<div class="empty"><div class="empty-icon">🏃</div><div class="empty-text">Nenhum cadastro ainda</div></div>';
     updateSpotlights(null, null);
     updateStats(0, 0, 0);
+    updateQueixaBreakdown([]);
     return;
   }
 
@@ -1534,6 +1979,7 @@ function renderQueue() {
 
   updateStats(waiting, attending, done);
   updateSpotlights(currentItem, nextItem);
+  updateQueixaBreakdown(queue);
 
   const html = queue.map(item => {
     const isWaiting   = item.status === 'waiting';
@@ -1541,8 +1987,7 @@ function renderQueue() {
     const isDone      = item.status === 'done';
     const id          = item.id;
 
-    // Tempo é calculado pela posição ATIVA (já considera atendimentos simultâneos
-    // via calcEstimatedTime, que divide pela quantidade de macas)
+    // Tempo estimado para fila de espera
     const estTime    = isWaiting
       ? calcEstimatedTime(item._activeSeq, start)
       : (isAttending ? 'Em atendimento' : 'Concluído');
@@ -1556,6 +2001,49 @@ function renderQueue() {
         icon: ''
       });
     }
+
+    // Bloco de cronômetro de fase (somente para "attending")
+    let phaseBlock = '';
+    if (isAttending) {
+      if (item.phase && item.phaseStartedAt) {
+        const elapsed  = Math.floor((Date.now() - item.phaseStartedAt) / 1000);
+        const limitSec = (item.phase === 'bota' ? state.tempoBota : state.tempoMaca) * 60;
+        const over     = elapsed >= limitSec;
+        const pct      = elapsed / limitSec;
+        const display  = over ? '+' + formatTimer(elapsed - limitSec) : formatTimer(elapsed);
+        const cls      = over ? 'phase-timer-elapsed overtime' : (pct >= 0.8 ? 'phase-timer-elapsed warning' : 'phase-timer-elapsed');
+        const emoji    = item.phase === 'bota' ? '🥾' : '🛏️';
+        const fname    = item.phase === 'bota' ? 'Bota' : 'Maca';
+        const lim      = item.phase === 'bota' ? state.tempoBota : state.tempoMaca;
+        phaseBlock = `
+          <div class="phase-timer-wrap">
+            <div class="phase-timer-phase">Fase atual<span>${emoji} ${fname} · ${lim}min</span></div>
+            <div class="${cls}" id="timer-${id}">${display}</div>
+          </div>`;
+      } else {
+        phaseBlock = `<div class="phase-no-timer">⏳ Inicie a fase para ativar o cronômetro</div>`;
+      }
+    }
+
+    // Toggle de tipo de paciente
+    const pt = item.patientType || '';
+    const ptBlock = `
+      <div class="ptype-wrap">
+        <span class="ptype-label">👤 Tipo</span>
+        <button class="ptype-btn ${pt === 'atleta' ? 'active-atleta' : ''}"
+          onclick="setPatientType('${id}', '${pt === 'atleta' ? '' : 'atleta'}')">
+          🏃 Atleta
+        </button>
+        <button class="ptype-btn ${pt === 'cliente_pago' ? 'active-cliente' : ''}"
+          onclick="setPatientType('${id}', '${pt === 'cliente_pago' ? '' : 'cliente_pago'}')">
+          💳 Cliente Pago
+        </button>
+      </div>`;
+
+    // Pill de queixa
+    const qPill = item.queixa
+      ? `<span style="background:#EDE9FE;color:#5C2D91;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;white-space:nowrap;">🩺 ${esc(item.queixa)}</span>`
+      : '';
 
     return `
       <div class="q-item status-${item.status}" id="qi-${item._seq}">
@@ -1577,7 +2065,9 @@ function renderQueue() {
                   ? ` <span class="qi-alert">(${minsUntil >= 0 ? minsUntil + 'min' : 'AGORA'})</span>`
                   : ''}</span>`
               : ''}
+            ${qPill}
           </div>
+<<<<<<< Updated upstream
           ${isAttending ? `
             <div class="ptimer-wrap" id="ptimer-wrap-${id}">
               <span class="ptimer" id="ptimer-${id}">00:00</span>
@@ -1585,6 +2075,9 @@ function renderQueue() {
               <span class="ptimer-badge" id="ptimer-badge-${id}"></span>
             </div>
           ` : ''}
+=======
+          ${phaseBlock}
+>>>>>>> Stashed changes
           <div class="qi-actions">
             ${isWaiting || isAttending ? `
               <a href="${buildWaLink(item.phone, item.name)}"
@@ -1593,33 +2086,36 @@ function renderQueue() {
                 Notificar
               </a>
             ` : ''}
+            ${isAttending ? `
+              <button class="btn btn-bota" onclick="setPhase('${id}', 'bota')">🥾 Bota</button>
+              <button class="btn btn-maca" onclick="setPhase('${id}', 'maca')">🛏️ Maca</button>
+            ` : ''}
             ${isWaiting ? `
               <button class="btn btn-mark" onclick="setStatus('${id}', 'attending')">
                 ▶ Em atendimento
               </button>
             ` : ''}
             ${isAttending ? `
-              <button class="btn btn-done" onclick="setStatus('${id}', 'done')">
-                ✅ Concluído
-              </button>
-              <button class="btn btn-icon" onclick="setStatus('${id}', 'waiting')" style="font-size:11px">
-                ↩ Voltar
-              </button>
+              <button class="btn btn-done" onclick="setStatus('${id}', 'done')">✅ Concluído</button>
+              <button class="btn btn-icon" onclick="setStatus('${id}', 'waiting')" style="font-size:11px">↩ Voltar</button>
             ` : ''}
             ${isDone ? `
-              <button class="btn btn-icon" onclick="setStatus('${id}', 'waiting')" style="font-size:11px">
-                ↩ Reabrir
-              </button>
+              <button class="btn btn-icon" onclick="setStatus('${id}', 'waiting')" style="font-size:11px">↩ Reabrir</button>
             ` : ''}
           </div>
+          ${ptBlock}
         </div>
       </div>
     `;
   }).join('');
 
   list.innerHTML = html;
+<<<<<<< Updated upstream
   // Inicia/mantém o loop de atualização dos cronômetros individuais
   startPatientTimerPolling();
+=======
+  startTimerInterval();
+>>>>>>> Stashed changes
 }
 
 function updateSpotlights(current, next) {
@@ -1657,14 +2153,17 @@ function updateStats(wait, attend, done) {
 function exportCSV() {
   if (!state.queue.length) { showToast('⚠️ Fila ainda vazia'); return; }
 
-  const headers  = ['Posição', 'Nome', 'WhatsApp', 'Instagram', 'Status', 'Cadastrado em'];
+  const headers  = ['Posição', 'Nome', 'WhatsApp', 'Instagram', 'Queixa Principal', 'Tipo', 'Status', 'Cadastrado em'];
   const statusPt = { waiting: 'Aguardando', attending: 'Em atendimento', done: 'Concluído' };
+  const typePt   = { atleta: 'Atleta', cliente_pago: 'Cliente Pago' };
 
   const rows = state.queue.map(item => [
-    item.position,
+    item._seq,
     item.name,
     item.phone,
     item.instagram,
+    item.queixa || '',
+    typePt[item.patientType] || '',
     statusPt[item.status] || item.status,
     item.createdAt
       ? new Date(item.createdAt).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
