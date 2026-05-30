@@ -216,9 +216,13 @@
     .hero::after {
       content: '';
       position: absolute;
-      inset: 0;
-      background: url('overall.png') no-repeat center / cover;
-      opacity: 0.25;
+      right: 0px;
+      bottom: 0px;
+      width: 70%;
+      max-width: 350px;
+      height: 100%;
+      background: url('overall.png') no-repeat right center / contain;
+      opacity: 0.9;
       pointer-events: none;
       z-index: 0;
     }
@@ -520,9 +524,12 @@
     .adm-header::after {
       content: '';
       position: absolute;
-      inset: 0;
-      background: url('overall.png') no-repeat center / cover;
-      opacity: 0.20;
+      right: 10px;
+      top: 5px;
+      bottom: 5px;
+      width: 150px;
+      background: url('overall.png') no-repeat right center / contain;
+      opacity: 0.4;
       pointer-events: none;
       z-index: -1;
     }
